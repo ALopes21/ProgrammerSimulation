@@ -1,0 +1,11 @@
+void bridgeCollider(bool false)
+{
+	Collider rect = gameObject.GetComponent<Collider>();
+	rect.enabled = false;
+}
+
+void bridgePosition(foat x, float y)
+{
+	Vector2 newPosition = new Vector2(x, y);
+	gameObject.transform.position = new Position;
+}
