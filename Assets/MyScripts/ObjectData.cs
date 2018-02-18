@@ -6,6 +6,7 @@ public class ObjectData : MonoBehaviour {
 
     public Sprite Disabled, Enabled;
     public TextAsset codedata;
+    public Vector3 previousPos;
 
     //Variables that the gameObject needs
     public bool Move, Collider, Sprite;
@@ -25,6 +26,7 @@ public class ObjectData : MonoBehaviour {
 
     public void MoveObject(float variable, char axis)
     {
+        previousPos = gameObject.transform.position;
         Vector3 newPos = gameObject.transform.position;
 
         switch (axis)

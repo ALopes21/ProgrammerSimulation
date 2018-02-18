@@ -62,7 +62,6 @@ public class VariableSlot : MonoBehaviour, IDropHandler
             {
                 item.MakeVisible(false);                            // Hide item in cell till dragging
                 isTaken = false;
-                handler.BackPeddle(item);
             }
         }
     }
@@ -146,6 +145,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
                             break;
                         case VariableType.None:
                             SetItem(item, sourceCell);
+                            handler.BackPeddle(item);
                             break;
                         default:
                             break;

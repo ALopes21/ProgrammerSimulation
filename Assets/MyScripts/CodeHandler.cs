@@ -31,23 +31,6 @@ public class CodeHandler : MonoBehaviour {
             }
         }
     }
-    public void UndoTheThing()
-    {
-        data = ObjInt.currentObject.GetComponent<ObjectData>();
-        if (data.Move)
-        {
-            Debug.Log(droppedChar + "," + droppedFloat);
-            if (droppedChar == 'y' || droppedChar == 'x')
-            {
-                if(droppedFloat != 0 )
-                {
-                    droppedFloat -= droppedFloat * 2;
-                    data.MoveObject(droppedFloat, droppedChar);
-                }
-
-            }
-        }
-    }
     public void DoTheBooleanThing()
     {
         data = ObjInt.currentObject.GetComponent<ObjectData>();
@@ -59,22 +42,21 @@ public class CodeHandler : MonoBehaviour {
 
     public void BackPeddle(DragAndDropItem item)
     {
-        if (DragAndDropItem.sourceCell.variableType != VariableSlot.VariableType.None)
+        switch (item.itemVariableType)
         {
-            switch (item.itemVariableType)
-            {
-                case DragAndDropItem.ItemVariableType.Float:
-                    droppedFloat = item.float_prop;
-                    UndoTheThing();
-                    //droppedFloat = 0;
-                    break;
-                case DragAndDropItem.ItemVariableType.Bool:
-                    droppedBool = item.bool_prop;
-                    DoTheBooleanThing();
-                    break;
-                default:
-                    break;
-            }
+            case DragAndDropItem.ItemVariableType.Float:
+                if(data.Move)
+                {
+                    data = ObjInt.currentObject.GetComponent<ObjectData>();
+                    ObjInt.currentObject.gameObject.transform.position = data.previousPos;
+                }
+                break;
+            case DragAndDropItem.ItemVariableType.Bool:
+                DoTheBooleanThing();
+                break;
+            default:
+                break;
         }
+        
     }
 }
