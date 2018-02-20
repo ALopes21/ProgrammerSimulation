@@ -14,6 +14,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
         Float,
         Bool,
         Char,
+        Any,
         None
     }
 
@@ -143,6 +144,25 @@ public class VariableSlot : MonoBehaviour, IDropHandler
                                     break;
                             }
                             break;
+                        case VariableType.Any:
+                            switch(item.itemVariableType)
+                            {
+                                case DragAndDropItem.ItemVariableType.Float:
+                                    SetItem(item, sourceCell);
+                                    handler.droppedFloat = item.float_prop;
+                                    handler.droppedChar = item.char_prop;
+                                    handler.DoTheThing();
+                                    break;
+                                case DragAndDropItem.ItemVariableType.Bool:
+                                    SetItem(item, sourceCell);
+                                    handler.droppedBool = item.bool_prop;
+                                    handler.DoTheBooleanThing();
+                                    break;
+                                default:
+                                    Debug.Log("An error occurred");
+                                    break;
+                            }
+                            break;
                         case VariableType.None:
                             SetItem(item, sourceCell);
                             handler.BackPeddle(item);
@@ -187,8 +207,11 @@ public class VariableSlot : MonoBehaviour, IDropHandler
             case VariableType.None:
                 GetComponent<Image>().color = Color.grey;
                 break;
-            default:
+            case VariableType.Any:
                 GetComponent<Image>().color = Color.white;
+                break;
+            default:
+                Debug.Log("An error occurred");
                 break;
 
         }

@@ -16,7 +16,7 @@ namespace UnityStandardAssets.Utility
             Enable = 3,     // Enable a component
             Animate = 4,    // Start animation on target
             Deactivate = 5,  // Decativate target GameObject
-            GetVariables = 6    //Put variables into slots and destroy chest
+            GetVariables = 6,    //Put variables into slots and destroy chest
         }
 
         public Mode action = Mode.Activate;         // The action to accomplish
@@ -52,7 +52,7 @@ namespace UnityStandardAssets.Utility
                     case Mode.Trigger:
                         if (targetGameObject != null)
                         {
-                            targetGameObject.BroadcastMessage("DoActivateTrigger");
+                            targetGameObject.BroadcastMessage("DoActivateTrigger");                          
                         }
                         break;
                     case Mode.Replace:

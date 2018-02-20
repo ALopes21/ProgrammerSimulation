@@ -14,11 +14,6 @@ public class ObjectInteraction : MonoBehaviour
     void Start()
     {
         CodePanel = GameObject.FindGameObjectWithTag("CodePanel");
-        //cells = GameObject.FindGameObjectsWithTag("Cell");
-        //for (int i = 0; i < cells.Length; i++)
-        //{
-        //    cells[i].SetActive(false);
-        //}
         CodePanel.SetActive(false);
     }
 
@@ -51,42 +46,11 @@ public class ObjectInteraction : MonoBehaviour
         ObjectData data = selectedObject.GetComponent<ObjectData>();
         string codeData = data.codedata.text;
         CodePanel.GetComponentInChildren<Text>().text = codeData;
-        //CheckBooleans(data);
     }
-    //public void ActivateCell(VariableSlot.VariableType type)
-    //{
-    //    for (int j = 0; j < cells.Length; j++)
-    //    {
-    //        if (cells[j].activeInHierarchy == false)
-    //        {
-    //            cells[j].SetActive(true);
-    //            cells[j].GetComponent<VariableSlot>().variableType = type;
-    //            cells[j].GetComponent<VariableSlot>().SetBackgroundState(type);
-    //            break;
-    //        }
-    //    }
-    //}
-
-    //public void CheckBooleans(ObjectData data)
-    //{
-    //    if (data.Move)
-    //    {
-    //        ActivateCell(VariableSlot.VariableType.Char);
-    //        ActivateCell(VariableSlot.VariableType.Float);
-    //    }
-    //    if (data.Collider)
-    //    {
-    //        ActivateCell(VariableSlot.VariableType.Bool);
-    //    }
-    //}
 
     public void DeselectCurrentObject()
     {
         currentObject = null;
-        //for (int i = 0; i < cells.Length; i++)
-        //{
-        //    cells[i].SetActive(false);
-        //}
         CodePanel.SetActive(false);
     }
 }
