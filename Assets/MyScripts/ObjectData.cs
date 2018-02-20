@@ -76,4 +76,13 @@ public class ObjectData : MonoBehaviour {
                 break;
         }
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag == "Codeable")
+        {
+            Debug.Log("Triggered");
+            moving = false;
+        }
+    }
 }
