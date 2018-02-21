@@ -6,15 +6,18 @@ using UnityEngine.UI;
 public class ObjectInteraction : MonoBehaviour
 {
 
-    private GameObject CodePanel;
+    private GameObject[] CodePanel;
     public GameObject currentObject;
-    //private GameObject[] cells;
+    public GameObject activePanel;
 
     // Use this for initialization
     void Start()
     {
-        CodePanel = GameObject.FindGameObjectWithTag("CodePanel");
-        CodePanel.SetActive(false);
+        CodePanel = GameObject.FindGameObjectsWithTag("CodePanel");
+        for(int i = 0; i < CodePanel.Length; i++)
+        {
+            CodePanel[i].SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -43,15 +46,27 @@ public class ObjectInteraction : MonoBehaviour
     //Change this to activate gameObject/sprite instead of text
     public void SetupCodePanel(GameObject selectedObject)
     {
-        CodePanel.SetActive(true);
-        ObjectData data = selectedObject.GetComponent<ObjectData>();
-        string codeData = data.codedata.text;
-        CodePanel.GetComponentInChildren<Text>().text = codeData;
+        for(int i = 0; i< CodePanel.Length; i++)
+        {
+            if(CodePanel[i].gameObject.name == selectedObject.name + "Code")
+            {
+                CodePanel[i].SetActive(true);
+                activePanel = CodePanel[i];
+                ObjectData data = selectedObject.GetComponent<ObjectData>();
+                string codeData = data.codedata.text;
+                activePanel.GetComponentInChildren<Text>().text = codeData;
+                break;
+            }
+        }
     }
 
     public void DeselectCurrentObject()
     {
+        for (int i = 0; i < CodePanel.Length; i++)
+        {
+            CodePanel[i].SetActive(false);
+        }
         currentObject = null;
-        CodePanel.SetActive(false);
+        activePanel = null;
     }
 }

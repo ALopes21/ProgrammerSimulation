@@ -46,7 +46,6 @@ public class VariableSlot : MonoBehaviour, IDropHandler
     {
         //SetBackgroundState(GetComponentInChildren<DragAndDropItem>() == null ? false : true);
         SetBackgroundState(variableType);
-        handler = GameObject.Find("CodePanel").GetComponent<CodeHandler>();
     }
 
     /// <summary>
@@ -94,6 +93,8 @@ public class VariableSlot : MonoBehaviour, IDropHandler
     /// <param name="data"></param>
     public void OnDrop(PointerEventData data)
     {
+        handler = GameObject.Find("Main Camera").GetComponent<ObjectInteraction>().activePanel.GetComponent<CodeHandler>();
+
         if (DragAndDropItem.icon != null)
         {
             if (DragAndDropItem.icon.activeSelf == true)                    // If icon inactive do not need to drop item in cell

@@ -28,6 +28,7 @@ public class CodeHandler : MonoBehaviour {
             if (droppedFloat != 0 && (droppedChar == 'y' || droppedChar == 'x'))
             {
                 data.MoveObject(droppedFloat, droppedChar);
+                data.Move = false;
             }
         }
     }
@@ -37,6 +38,7 @@ public class CodeHandler : MonoBehaviour {
         if (data.Collider)
         {
             data.ToggleCollider();
+            data.Collider = false;
         }
     }
 
@@ -45,14 +47,19 @@ public class CodeHandler : MonoBehaviour {
         switch (item.itemVariableType)
         {
             case DragAndDropItem.ItemVariableType.Float:
-                if(data.Move)
+                if(!data.Move)
                 {
                     data = ObjInt.currentObject.GetComponent<ObjectData>();
                     ObjInt.currentObject.gameObject.transform.position = data.previousPos;
+                    data.Move = true;
                 }
                 break;
             case DragAndDropItem.ItemVariableType.Bool:
-                DoTheBooleanThing();
+                if(!data.Collider)
+                {
+                    data.ToggleCollider();
+                    data.Collider = true;
+                }
                 break;
             default:
                 break;
