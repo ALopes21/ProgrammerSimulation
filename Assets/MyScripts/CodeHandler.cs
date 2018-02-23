@@ -23,22 +23,22 @@ public class CodeHandler : MonoBehaviour {
     public void DoTheThing()
     {
         data = ObjInt.currentObject.GetComponent<ObjectData>();
-        if (data.Move)
+        if(!data.FloatinCell)
         {
             if (droppedFloat != 0 && (droppedChar == 'y' || droppedChar == 'x'))
             {
                 data.MoveObject(droppedFloat, droppedChar);
-                data.Move = false;
+                data.FloatinCell = true;
             }
         }
     }
     public void DoTheBooleanThing()
     {
         data = ObjInt.currentObject.GetComponent<ObjectData>();
-        if (data.Collider)
+        if (!data.BoolinCell)
         {
             data.ToggleCollider();
-            data.Collider = false;
+            data.BoolinCell = true;
         }
     }
 
@@ -47,18 +47,18 @@ public class CodeHandler : MonoBehaviour {
         switch (item.itemVariableType)
         {
             case DragAndDropItem.ItemVariableType.Float:
-                if(!data.Move)
+                if(data.FloatinCell)
                 {
                     data = ObjInt.currentObject.GetComponent<ObjectData>();
                     ObjInt.currentObject.gameObject.transform.position = data.previousPos;
-                    data.Move = true;
+                    data.FloatinCell = false;
                 }
                 break;
             case DragAndDropItem.ItemVariableType.Bool:
-                if(!data.Collider)
+                if(data.BoolinCell)
                 {
                     data.ToggleCollider();
-                    data.Collider = true;
+                    data.BoolinCell = false;
                 }
                 break;
             default:

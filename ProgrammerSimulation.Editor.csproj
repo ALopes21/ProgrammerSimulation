@@ -311,7 +311,10 @@
     <Compile Include="Assets\Editor\ItemHolder.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Resources\BoxCode.txt" />
+    <None Include="Assets\Resources\BoxBool1Code.txt" />
+    <None Include="Assets\Resources\BoxBool2Code.txt" />
+    <None Include="Assets\Resources\BoxY1Code.txt" />
+    <None Include="Assets\Resources\BoxY3Code.txt" />
     <None Include="Assets\Resources\BridgeCode.txt" />
     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
   </ItemGroup>

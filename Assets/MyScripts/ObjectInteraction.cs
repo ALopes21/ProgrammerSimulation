@@ -35,6 +35,11 @@ public class ObjectInteraction : MonoBehaviour
                     Debug.Log("I'm hitting " + hit.collider.name);
                     if (hit.collider.tag == "Codeable")
                     {
+                        if (hit.collider.isTrigger)
+                        {
+                            hit.collider.enabled = false;
+                            hit.collider.isTrigger = false;
+                        }
                         currentObject = hit.collider.gameObject;
                         SetupCodePanel(currentObject);
                     }
@@ -65,6 +70,12 @@ public class ObjectInteraction : MonoBehaviour
         for (int i = 0; i < CodePanel.Length; i++)
         {
             CodePanel[i].SetActive(false);
+        }
+        Collider2D col = currentObject.GetComponent<Collider2D>();
+        if(col.enabled == false)
+        {
+            col.enabled = true;
+            col.isTrigger = true;
         }
         currentObject = null;
         activePanel = null;

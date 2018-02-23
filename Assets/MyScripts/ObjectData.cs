@@ -9,28 +9,33 @@ public class ObjectData : MonoBehaviour {
     public Vector2 previousPos;
     public bool moving;
 
+    public bool FloatinCell, BoolinCell;
+
     //Variables that the gameObject needs
-    public bool Move, Collider, Sprite;
+    //public bool Move, Collider, Sprite;
     
     private Vector2 newPos;
 
     // Use this for initialization
     void Start () {
 
-        Enabled = Resources.Load(gameObject.name + "ACol", typeof(Sprite)) as Sprite;
-        Disabled = Resources.Load(gameObject.name + "DCol", typeof(Sprite)) as Sprite;
+        //Enabled = Resources.Load(gameObject.name + "ACol", typeof(Sprite)) as Sprite;
+        //Disabled = Resources.Load(gameObject.name + "DCol", typeof(Sprite)) as Sprite;
         codedata = (TextAsset)Resources.Load(gameObject.name + "Code", typeof(TextAsset));
-        moving = false;
     }
 
     // Update is called once per frame
-    void Update () {
-        if(moving)
+    void Update ()
+    {
+        if (moving)
         {
-            transform.position = Vector2.MoveTowards(new Vector2(transform.position.x, transform.position.y),newPos, 3 * Time.deltaTime);
-            if(transform.position.x == newPos.x && transform.position.y == newPos.y)
+            if(newPos != new Vector2(0,0))
             {
-                moving = false;
+                transform.position = Vector2.MoveTowards(new Vector2(transform.position.x, transform.position.y), newPos, 3 * Time.deltaTime);
+                if (transform.position.x == newPos.x && transform.position.y == newPos.y)
+                {
+                    moving = false;
+                }
             }
         }
     }
@@ -61,15 +66,15 @@ public class ObjectData : MonoBehaviour {
         Collider2D col = gameObject.GetComponent<Collider2D>();
         SpriteRenderer renderer = gameObject.GetComponent<SpriteRenderer>();
 
-        switch (col.isTrigger)
+        switch (col.enabled)
         {
             case true:
-                col.isTrigger = false;
-                renderer.sprite = Enabled;
+                col.enabled = false;
+                renderer.sprite = Disabled;
                 break;
             case false:
-                col.isTrigger = true;
-                renderer.sprite = Disabled;
+                col.enabled = true;
+                renderer.sprite = Enabled;
                 break;
             default:
                 Debug.Log("Switch Case Error: check collider2D");
