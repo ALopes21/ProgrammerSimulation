@@ -84,10 +84,11 @@ public class ObjectData : MonoBehaviour {
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.tag == "Codeable")
+        if (collision.gameObject.tag == "Codeable")
         {
             Debug.Log("Collided");
             moving = false;
+
         }
     }
 
@@ -95,8 +96,18 @@ public class ObjectData : MonoBehaviour {
     {
         if (collision.gameObject.tag == "Codeable")
         {
-            Debug.Log("Exited");
-            moving = true;
+            StartCoroutine(WaitForSeconds(1));
+            if (FloatinCell)
+            {
+                Debug.Log("Exited");
+                moving = true;
+            }
         }
     }
+
+    IEnumerator WaitForSeconds(int seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+    }
+
 }

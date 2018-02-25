@@ -14,7 +14,7 @@ public class ObjectInteraction : MonoBehaviour
     void Start()
     {
         CodePanel = GameObject.FindGameObjectsWithTag("CodePanel");
-        for(int i = 0; i < CodePanel.Length; i++)
+        for (int i = 0; i < CodePanel.Length; i++)
         {
             CodePanel[i].SetActive(false);
         }
@@ -29,17 +29,12 @@ public class ObjectInteraction : MonoBehaviour
             {
                 //Vector3 pos = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
                 Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero);
+                RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 5f, 1 << LayerMask.NameToLayer("Objects"));
                 if (hit != null && hit.collider != null)
                 {
                     Debug.Log("I'm hitting " + hit.collider.name);
                     if (hit.collider.tag == "Codeable")
                     {
-                        if (hit.collider.isTrigger)
-                        {
-                            hit.collider.enabled = false;
-                            hit.collider.isTrigger = false;
-                        }
                         currentObject = hit.collider.gameObject;
                         SetupCodePanel(currentObject);
                     }
@@ -72,11 +67,6 @@ public class ObjectInteraction : MonoBehaviour
             CodePanel[i].SetActive(false);
         }
         Collider2D col = currentObject.GetComponent<Collider2D>();
-        if(col.enabled == false)
-        {
-            col.enabled = true;
-            col.isTrigger = true;
-        }
         currentObject = null;
         activePanel = null;
     }
