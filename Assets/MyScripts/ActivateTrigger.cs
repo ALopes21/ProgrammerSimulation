@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
 namespace UnityStandardAssets.Utility
@@ -16,7 +17,7 @@ namespace UnityStandardAssets.Utility
             Enable = 3,     // Enable a component
             Animate = 4,    // Start animation on target
             Deactivate = 5,  // Decativate target GameObject
-            GetVariables = 6,    //Put variables into slots and destroy chest
+            GetVariables = 6    //Put variables into slots and destroy chest
         }
 
         public Mode action = Mode.Activate;         // The action to accomplish
@@ -27,6 +28,7 @@ namespace UnityStandardAssets.Utility
 
         public GameObject[] slots;
         public GameObject[] items;
+
 
         private void Start()
         {

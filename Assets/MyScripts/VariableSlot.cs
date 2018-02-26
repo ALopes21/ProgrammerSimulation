@@ -21,6 +21,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
     public VariableType variableType = VariableType.Float;
     public bool isTaken;
     public CodeHandler handler;
+    public SceneHandler sceneHandler;
 
     public struct DropDescriptor                                            // Struct with info about item's drop event
     {
@@ -46,6 +47,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
     {
         //SetBackgroundState(GetComponentInChildren<DragAndDropItem>() == null ? false : true);
         SetBackgroundState(variableType);
+        sceneHandler = GameObject.Find("Finishline").GetComponent<SceneHandler>();
     }
 
     /// <summary>
@@ -116,6 +118,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
                                     break;
                                 default:
                                     Debug.Log("ITEM NOT A FLOAT");
+                                    sceneHandler.lives--;
                                     break;
                             }
                             break;
@@ -129,6 +132,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
                                     break;
                                 default:
                                     Debug.Log("ITEM NOT A BOOL");
+                                    sceneHandler.lives--;
                                     break;
                             }
                             break;
@@ -142,6 +146,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
                                     break;
                                 default:
                                     Debug.Log("ITEM NOT A CHAR");
+                                    sceneHandler.lives--;
                                     break;
                             }
                             break;

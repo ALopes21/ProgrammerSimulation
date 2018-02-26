@@ -18,9 +18,6 @@ public class ObjectData : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-
-        //Enabled = Resources.Load(gameObject.name + "ACol", typeof(Sprite)) as Sprite;
-        //Disabled = Resources.Load(gameObject.name + "DCol", typeof(Sprite)) as Sprite;
         codedata = (TextAsset)Resources.Load(gameObject.name + "Code", typeof(TextAsset));
     }
 

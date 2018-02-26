@@ -302,8 +302,11 @@
   <ItemGroup>
     <Compile Include="Assets\MyScripts\ActivateTrigger.cs" />
     <Compile Include="Assets\MyScripts\CodeHandler.cs" />
+    <Compile Include="Assets\MyScripts\LevelMenuHandler.cs" />
     <Compile Include="Assets\MyScripts\ObjectData.cs" />
     <Compile Include="Assets\MyScripts\ObjectInteraction.cs" />
+    <Compile Include="Assets\MyScripts\Persistence.cs" />
+    <Compile Include="Assets\MyScripts\SceneHandler.cs" />
     <Compile Include="Assets\MyScripts\VariableSlot.cs" />
     <Compile Include="Assets\SimpleDragAndDrop\Scripts\DragAndDropCell.cs" />
     <Compile Include="Assets\SimpleDragAndDrop\Scripts\DragAndDropItem.cs" />
