@@ -96,10 +96,52 @@ public class SceneHandler : MonoBehaviour
         LevelData newLevel = new LevelData();
         LevelData.current = newLevel;
         newLevel.Number = SceneNumber;
-        newLevel.Time = myTime;
+
+        for (int i = 0; i < Persistence.savedLevels.Count; i++)
+        {
+            if (Persistence.savedLevels[i].Number == SceneNumber)
+            {
+                Debug.Log("OldStars: " + Persistence.savedLevels[i].Stars);
+                if(Persistence.savedLevels[i].Stars < StarNumber)
+                {
+                    newLevel.Stars = StarNumber;
+                    Debug.Log("NewStars: " + newLevel.Stars);
+                }
+                else
+                {
+                    newLevel.Stars = Persistence.savedLevels[i].Stars;
+                    Debug.Log("SameAs: " + newLevel.Stars);
+                }
+
+                Debug.Log("OldTime: " + Persistence.savedLevels[i].Time);
+                if (Persistence.savedLevels[i].Time > myTime)
+                {
+                    newLevel.Time = myTime;
+                    Debug.Log("NewTime: " + newLevel.Time);
+                }
+                else
+                {
+                    newLevel.Time = Persistence.savedLevels[i].Time;
+                    Debug.Log("SameAs: " + newLevel.Time);
+                }
+                newLevel.currentLevel = SceneNumber++;
+                Persistence.UpdateLevelList(LevelData.current);
+                return;
+            }
+            else
+            {
+                Debug.Log("Creating New Save...");
+                newLevel.Stars = StarNumber;
+                newLevel.Time = myTime;
+                newLevel.currentLevel = SceneNumber++;
+                Persistence.UpdateLevelList(LevelData.current);
+                return;
+            }
+        }
+        Debug.Log("Creating FIRST save...");
         newLevel.Stars = StarNumber;
-        newLevel.Unclocked = Unclocked;
-        //Persistence.savedLevels[SceneNumber++].Unclocked = true;
+        newLevel.Time = myTime;
+        newLevel.currentLevel = SceneNumber++;
         Persistence.UpdateLevelList(LevelData.current);
     }
 

@@ -70,7 +70,6 @@ public class LevelData
     public int Number;
     public int Stars;
     public float Time;
-    public bool Unclocked;
-
+    public int currentLevel;
 }
 
