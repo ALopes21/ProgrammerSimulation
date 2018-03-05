@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class CodeHandler : MonoBehaviour {
 
+    //Variables
     public float droppedFloat;
     public char droppedChar;
     public bool droppedBool;
+    public GameObject droppedGO;
+
+    //References
     public ObjectInteraction ObjInt;
     public ObjectData data;
 
@@ -20,7 +24,7 @@ public class CodeHandler : MonoBehaviour {
 		
 	}
 
-    public void DoTheThing()
+    public void DoTheMoveThing()
     {
         data = ObjInt.currentObject.GetComponent<ObjectData>();
         if(!data.FloatinCell)
@@ -32,13 +36,26 @@ public class CodeHandler : MonoBehaviour {
             }
         }
     }
-    public void DoTheBooleanThing()
+    public void DoTheColliderThing()
     {
         data = ObjInt.currentObject.GetComponent<ObjectData>();
         if (!data.BoolinCell)
         {
             data.ToggleCollider();
             data.BoolinCell = true;
+        }
+    }
+
+    public void DoTheObjectThing()
+    {
+        data = ObjInt.currentObject.GetComponent<ObjectData>();
+        if (!data.ObjinCell)
+        {
+            if (droppedGO != null)
+            {
+                data.ChangeTarget(droppedGO);
+                data.ObjinCell = true;
+            }
         }
     }
 

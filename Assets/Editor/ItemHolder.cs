@@ -13,6 +13,7 @@ public class ItemHolder : Editor
     SerializedProperty floatProp;
     SerializedProperty boolProp;
     SerializedProperty charProp;
+    SerializedProperty GOProp;
 
     void OnEnable()
     {
@@ -21,6 +22,7 @@ public class ItemHolder : Editor
         floatProp = serializedObject.FindProperty("float_prop");
         boolProp = serializedObject.FindProperty("bool_prop");
         charProp = serializedObject.FindProperty("char_prop");
+        GOProp = serializedObject.FindProperty("GO_prop");
     }
 
     public override void OnInspectorGUI()
@@ -37,13 +39,11 @@ public class ItemHolder : Editor
                 floatProp.floatValue = EditorGUILayout.FloatField("FloatProp", floatProp.floatValue, GUILayout.MinWidth(50));
                 EditorGUILayout.PropertyField(charProp, new GUIContent("CharProp"));
                 break;
-
             case DragAndDropItem.ItemVariableType.Bool:
                 EditorGUILayout.PropertyField(boolProp, new GUIContent("BoolProp"));
                 break;
-
-            case DragAndDropItem.ItemVariableType.Char:
-                EditorGUILayout.PropertyField(charProp, new GUIContent("CharProp"));
+            case DragAndDropItem.ItemVariableType.GameObject:
+                EditorGUILayout.PropertyField(GOProp, new GUIContent("GameObjectProp"));
                 break;
             default:
                 break;

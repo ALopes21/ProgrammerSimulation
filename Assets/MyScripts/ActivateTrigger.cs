@@ -72,6 +72,10 @@ namespace UnityStandardAssets.Utility
                         if (targetGameObject != null)
                         {
                             targetGameObject.SetActive(true);
+                            if(this.gameObject.name == "Killzone")
+                            {
+                                GameObject.Find("Finishline").GetComponent<SceneHandler>().gameOver = true;
+                            }
                         }
                         break;
                     case Mode.Enable:

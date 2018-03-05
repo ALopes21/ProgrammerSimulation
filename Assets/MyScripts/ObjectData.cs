@@ -9,7 +9,7 @@ public class ObjectData : MonoBehaviour {
     public Vector2 previousPos;
     public bool moving;
 
-    public bool FloatinCell, BoolinCell;
+    public bool FloatinCell, BoolinCell, ObjinCell;
 
     //Variables that the gameObject needs
     //public bool Move, Collider, Sprite;
@@ -77,6 +77,11 @@ public class ObjectData : MonoBehaviour {
                 Debug.Log("Switch Case Error: check collider2D");
                 break;
         }
+    }
+
+    public void ChangeTarget(GameObject obj)
+    {
+        gameObject.GetComponent<EnemyObject>().target = obj;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

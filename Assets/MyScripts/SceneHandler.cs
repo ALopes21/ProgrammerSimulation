@@ -16,6 +16,7 @@ public class SceneHandler : MonoBehaviour
     public GameObject[] Lives;
     public Sprite Star, NoStar, EmptyLife, FullLife;
     public GameObject ErrorPanel;
+    public bool gameOver;
 
     // Use this for initialization
     void Start()
@@ -35,6 +36,7 @@ public class SceneHandler : MonoBehaviour
         StarNumber = 3;
         lives = 3;
         triggered = false;
+        gameOver = false;
         for (int i= 0; i < Stars.Length; i++)
         {
             Stars[i].GetComponent<Image>().sprite = Star;
@@ -50,7 +52,10 @@ public class SceneHandler : MonoBehaviour
     {
         if(this.gameObject.name == "Finishline")
         {
-            IconHandler();
+            if(!gameOver)
+            {
+                IconHandler();
+            }
         }
         
     }
@@ -79,6 +84,7 @@ public class SceneHandler : MonoBehaviour
             case 0:
                 Lives[0].GetComponent<Image>().sprite = EmptyLife;
                 ErrorPanel.SetActive(true);
+                gameOver = true;
                 break;
             case 1:
                 Lives[1].GetComponent<Image>().sprite = EmptyLife;

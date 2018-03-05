@@ -13,7 +13,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
     {
         Float,
         Bool,
-        Char,
+        GameObject,
         Any,
         None
     }
@@ -114,7 +114,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
                                     SetItem(item, sourceCell);
                                     handler.droppedFloat = item.float_prop;
                                     handler.droppedChar = item.char_prop;
-                                    handler.DoTheThing();
+                                    handler.DoTheMoveThing();
                                     break;
                                 default:
                                     Debug.Log("ITEM NOT A FLOAT");
@@ -128,7 +128,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
                                 case DragAndDropItem.ItemVariableType.Bool:
                                     SetItem(item, sourceCell);
                                     handler.droppedBool = item.bool_prop;
-                                    handler.DoTheBooleanThing();
+                                    handler.DoTheColliderThing();
                                     break;
                                 default:
                                     Debug.Log("ITEM NOT A BOOL");
@@ -136,16 +136,16 @@ public class VariableSlot : MonoBehaviour, IDropHandler
                                     break;
                             }
                             break;
-                        case VariableType.Char:
+                        case VariableType.GameObject:
                             switch (item.itemVariableType)
                             {
-                                case DragAndDropItem.ItemVariableType.Char:
+                                case DragAndDropItem.ItemVariableType.GameObject:
                                     SetItem(item, sourceCell);
-                                    handler.droppedChar = item.char_prop;
-                                    handler.DoTheThing();
+                                    handler.droppedGO = item.GO_prop;
+                                    handler.DoTheObjectThing();
                                     break;
                                 default:
-                                    Debug.Log("ITEM NOT A CHAR");
+                                    Debug.Log("ITEM NOT A GAMEOBJECT");
                                     sceneHandler.lives--;
                                     break;
                             }
@@ -157,12 +157,17 @@ public class VariableSlot : MonoBehaviour, IDropHandler
                                     SetItem(item, sourceCell);
                                     handler.droppedFloat = item.float_prop;
                                     handler.droppedChar = item.char_prop;
-                                    handler.DoTheThing();
+                                    handler.DoTheMoveThing();
                                     break;
                                 case DragAndDropItem.ItemVariableType.Bool:
                                     SetItem(item, sourceCell);
                                     handler.droppedBool = item.bool_prop;
-                                    handler.DoTheBooleanThing();
+                                    handler.DoTheColliderThing();
+                                    break;
+                                case DragAndDropItem.ItemVariableType.GameObject:
+                                    SetItem(item, sourceCell);
+                                    handler.droppedGO = item.GO_prop;
+                                    handler.DoTheObjectThing();
                                     break;
                                 default:
                                     Debug.Log("An error occurred");
@@ -204,11 +209,11 @@ public class VariableSlot : MonoBehaviour, IDropHandler
             case VariableType.Bool:
                 GetComponent<Image>().color = Color.red;
                 break;
-            case VariableType.Char:
-                GetComponent<Image>().color = Color.green;
-                break;
             case VariableType.Float:
                 GetComponent<Image>().color = Color.blue;
+                break;
+            case VariableType.GameObject:
+                GetComponent<Image>().color = Color.green;
                 break;
             case VariableType.None:
                 GetComponent<Image>().color = Color.grey;

@@ -14,14 +14,15 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         Float,
         Bool,
-        Char
+        GameObject
     }
 
     public float float_prop;
-    public bool bool_prop;
     public char char_prop;
+    public bool bool_prop;
+    public GameObject GO_prop;
 
-    public Sprite FloatSprite, BoolSprite, CharSprite;
+    //public Sprite FloatSprite, BoolSprite, CharSprite;
 
     public ItemVariableType itemVariableType = ItemVariableType.Float;
 
@@ -35,16 +36,24 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     void Start()
     {
+
+
         switch (itemVariableType)
         {
             case ItemVariableType.Float:
-                gameObject.GetComponent<Image>().sprite = FloatSprite;
+                //gameObject.GetComponent<Image>().sprite = FloatSprite;
+                gameObject.GetComponentInChildren<Text>().text = "F";
+                gameObject.GetComponent<Image>().color = Color.blue;
                     break;
             case ItemVariableType.Bool:
-                gameObject.GetComponent<Image>().sprite = BoolSprite;
+                //gameObject.GetComponent<Image>().sprite = BoolSprite;
+                gameObject.GetComponentInChildren<Text>().text = "B";
+                gameObject.GetComponent<Image>().color = Color.red;
                 break;
-            case ItemVariableType.Char:
-                gameObject.GetComponent<Image>().sprite = CharSprite;
+            case ItemVariableType.GameObject:
+                //gameObject.GetComponent<Image>().sprite = GameObjectSprite;
+                gameObject.GetComponentInChildren<Text>().text = "O";
+                gameObject.GetComponent<Image>().color = Color.green;
                 break;
             default:
                 break;
@@ -61,8 +70,9 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         sourceCell = GetComponentInParent<VariableSlot>();
         draggedItem = this;                                                         // Set as dragged item
         icon = new GameObject("Icon");                                              // Create object for item's icon
-        Image image = icon.AddComponent<Image>();
-        image.sprite = GetComponent<Image>().sprite;
+        Image image = icon.AddComponent<Image>();                                   //Add the Image component to the Icon
+        image.sprite = GetComponent<Image>().sprite;                                //Give Icon.sprite this.sprite
+        image.color = GetComponent<Image>().color;                                  //Give Icon.color this.color
         image.raycastTarget = false;                                                // Disable icon's raycast for correct drop handling
         RectTransform iconRect = icon.GetComponent<RectTransform>();
         // Set icon's dimensions
@@ -133,5 +143,6 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public void MakeVisible(bool condition)
     {
         GetComponent<Image>().enabled = condition;
+        GetComponentInChildren<Text>().enabled = condition;
     }
 }
