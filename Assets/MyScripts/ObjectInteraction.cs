@@ -52,9 +52,6 @@ public class ObjectInteraction : MonoBehaviour
             {
                 CodePanel[i].SetActive(true);
                 activePanel = CodePanel[i];
-                ObjectData data = selectedObject.GetComponent<ObjectData>();
-                string codeData = data.codedata.text;
-                activePanel.GetComponentInChildren<Text>().text = codeData;
                 break;
             }
         }

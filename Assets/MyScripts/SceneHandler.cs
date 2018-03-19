@@ -82,15 +82,28 @@ public class SceneHandler : MonoBehaviour
         switch (lives)
         {
             case 0:
-                Lives[0].GetComponent<Image>().sprite = EmptyLife;
+                foreach(GameObject icon in Lives)
+                {
+                    icon.GetComponent<Image>().sprite = EmptyLife;
+                }
                 ErrorPanel.SetActive(true);
                 gameOver = true;
                 break;
             case 1:
+                Lives[0].GetComponent<Image>().sprite = FullLife;
                 Lives[1].GetComponent<Image>().sprite = EmptyLife;
+                Lives[2].GetComponent<Image>().sprite = EmptyLife;
                 break;
             case 2:
+                Lives[0].GetComponent<Image>().sprite = FullLife;
+                Lives[1].GetComponent<Image>().sprite = FullLife;
                 Lives[2].GetComponent<Image>().sprite = EmptyLife;
+                break;
+            case 3:
+                foreach (GameObject icon in Lives)
+                {
+                    icon.GetComponent<Image>().sprite = FullLife;
+                }
                 break;
             default:
                 break;

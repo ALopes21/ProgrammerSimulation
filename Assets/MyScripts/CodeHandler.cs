@@ -9,10 +9,11 @@ public class CodeHandler : MonoBehaviour {
     public char droppedChar;
     public bool droppedBool;
     public GameObject droppedGO;
+    public GameObject droppedSprite;
 
     //References
     public ObjectInteraction ObjInt;
-    public ObjectData data;
+    public bool FloatInCell, BoolInCell, ObjInCell, SprInCell;
 
     // Use this for initialization
     void Start () {
@@ -26,35 +27,45 @@ public class CodeHandler : MonoBehaviour {
 
     public void DoTheMoveThing()
     {
-        data = ObjInt.currentObject.GetComponent<ObjectData>();
-        if(!data.FloatinCell)
+        MovableObject data = ObjInt.currentObject.GetComponent<MovableObject>();
+        if(!FloatInCell)
         {
             if (droppedFloat != 0 && (droppedChar == 'y' || droppedChar == 'x'))
             {
                 data.MoveObject(droppedFloat, droppedChar);
-                data.FloatinCell = true;
+                FloatInCell = true;
             }
         }
     }
     public void DoTheColliderThing()
     {
-        data = ObjInt.currentObject.GetComponent<ObjectData>();
-        if (!data.BoolinCell)
+        ObjectChanger data = ObjInt.currentObject.GetComponent<ObjectChanger>();
+        if (!BoolInCell)
         {
             data.ToggleCollider();
-            data.BoolinCell = true;
+            BoolInCell = true;
         }
     }
 
     public void DoTheObjectThing()
     {
-        data = ObjInt.currentObject.GetComponent<ObjectData>();
-        if (!data.ObjinCell)
+        ObjectChanger data = ObjInt.currentObject.GetComponent<ObjectChanger>();
+        if (!ObjInCell)
         {
             if (droppedGO != null)
             {
-                data.ChangeTarget(droppedGO);
-                data.ObjinCell = true;
+                data.newTarget = droppedGO;
+                data.ChangeTarget();
+                ObjInCell = true;
+            }
+        }
+        if(!SprInCell)
+        {
+            if(droppedSprite != null)
+            {
+                data.newObject = droppedSprite;
+                data.ChangeSprite();
+                SprInCell = true;
             }
         }
     }
@@ -64,23 +75,41 @@ public class CodeHandler : MonoBehaviour {
         switch (item.itemVariableType)
         {
             case DragAndDropItem.ItemVariableType.Float:
-                if(data.FloatinCell)
+                if(FloatInCell)
                 {
-                    data = ObjInt.currentObject.GetComponent<ObjectData>();
-                    ObjInt.currentObject.gameObject.transform.position = data.previousPos;
-                    data.FloatinCell = false;
+                    MovableObject data = ObjInt.currentObject.GetComponent<MovableObject>();
+                    data.MoveBack();
+                    FloatInCell = false;
                 }
                 break;
             case DragAndDropItem.ItemVariableType.Bool:
-                if(data.BoolinCell)
+                if(BoolInCell)
                 {
+                    ObjectChanger data = ObjInt.currentObject.GetComponent<ObjectChanger>();
                     data.ToggleCollider();
-                    data.BoolinCell = false;
+                    BoolInCell = false;
+                }
+                break;
+            case DragAndDropItem.ItemVariableType.GameObject:
+                if (ObjInCell)
+                {
+                    ObjectChanger data = ObjInt.currentObject.GetComponent<ObjectChanger>();
+                    data.newTarget = data.prevTarget;
+                    data.ChangeTarget();
+                    ObjInCell = false;
+                }
+                break;
+            case DragAndDropItem.ItemVariableType.Sprite:
+                if(SprInCell)
+                {
+                    ObjectChanger data = ObjInt.currentObject.GetComponent<ObjectChanger>();
+                    data.newObject = data.prevObject;
+                    data.ChangeSprite();
+                    SprInCell = false;
                 }
                 break;
             default:
                 break;
-        }
-        
+        } 
     }
 }

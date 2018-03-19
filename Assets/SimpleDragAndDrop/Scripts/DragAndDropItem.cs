@@ -14,15 +14,17 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         Float,
         Bool,
-        GameObject
+        GameObject,
+        Sprite
     }
 
     public float float_prop;
     public char char_prop;
     public bool bool_prop;
     public GameObject GO_prop;
+    public GameObject sprite_prop;
 
-    //public Sprite FloatSprite, BoolSprite, CharSprite;
+    //public Sprite FloatSprite, BoolSprite, CharSprite, GOSprite, SprSprite;
 
     public ItemVariableType itemVariableType = ItemVariableType.Float;
 
@@ -51,9 +53,14 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 gameObject.GetComponent<Image>().color = Color.red;
                 break;
             case ItemVariableType.GameObject:
-                //gameObject.GetComponent<Image>().sprite = GameObjectSprite;
+                //gameObject.GetComponent<Image>().sprite = GOSprite;
                 gameObject.GetComponentInChildren<Text>().text = "O";
                 gameObject.GetComponent<Image>().color = Color.green;
+                break;
+            case ItemVariableType.Sprite:
+                //gameObject.GetComponent<Image>().sprite = SprSprite;
+                gameObject.GetComponentInChildren<Text>().text = "S";
+                gameObject.GetComponent<Image>().color = Color.yellow;
                 break;
             default:
                 break;

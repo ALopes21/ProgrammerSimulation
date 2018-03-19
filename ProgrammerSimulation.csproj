@@ -306,6 +306,8 @@
     <Compile Include="Assets\MyScripts\CodeHandler.cs" />
     <Compile Include="Assets\MyScripts\EnemyObject.cs" />
     <Compile Include="Assets\MyScripts\LevelMenuHandler.cs" />
+    <Compile Include="Assets\MyScripts\MovableObject.cs" />
+    <Compile Include="Assets\MyScripts\ObjectChanger.cs" />
     <Compile Include="Assets\MyScripts\ObjectData.cs" />
     <Compile Include="Assets\MyScripts\ObjectInteraction.cs" />
     <Compile Include="Assets\MyScripts\Persistence.cs" />

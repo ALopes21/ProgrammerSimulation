@@ -14,6 +14,7 @@ public class ItemHolder : Editor
     SerializedProperty boolProp;
     SerializedProperty charProp;
     SerializedProperty GOProp;
+    SerializedProperty SprProp;
 
     void OnEnable()
     {
@@ -23,6 +24,7 @@ public class ItemHolder : Editor
         boolProp = serializedObject.FindProperty("bool_prop");
         charProp = serializedObject.FindProperty("char_prop");
         GOProp = serializedObject.FindProperty("GO_prop");
+        SprProp = serializedObject.FindProperty("sprite_prop");
     }
 
     public override void OnInspectorGUI()
@@ -44,6 +46,9 @@ public class ItemHolder : Editor
                 break;
             case DragAndDropItem.ItemVariableType.GameObject:
                 EditorGUILayout.PropertyField(GOProp, new GUIContent("GameObjectProp"));
+                break;
+            case DragAndDropItem.ItemVariableType.Sprite:
+                EditorGUILayout.PropertyField(SprProp, new GUIContent("SpriteProp"));
                 break;
             default:
                 break;

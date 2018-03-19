@@ -31,7 +31,7 @@ public class EnemyObject : MonoBehaviour {
                 if (target != null)
                 {
                     shootCooldown = shootingRate;
-                    GameObject clone = (GameObject)Instantiate(ammo);
+                    GameObject clone = Instantiate(ammo) as GameObject;
                     clone.transform.position = transform.position;
                     Vector2 direction = target.transform.position;
                     clone.GetComponent<Ammo>().MoveMe(direction);

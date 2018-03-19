@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class Ammo : MonoBehaviour {
 
+    public Sprite originalSprite;
     public Vector2 myDirection;
-    public SceneHandler handler;
+    public SceneHandler scene_handler;
 
 	// Use this for initialization
 	void Start () {
-        handler = GameObject.Find("Finishline").GetComponent<SceneHandler>();
+        scene_handler = GameObject.Find("Finishline").GetComponent<SceneHandler>();
 	}
 	
 	// Update is called once per frame
@@ -29,22 +30,45 @@ public class Ammo : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        switch (collision.gameObject.tag)
+        if(gameObject.tag == "SoftAmmo")
         {
-            case "Player":
-                Destroy(gameObject);
-                handler.lives--;
-                break;
-            case "breakable":
-                GameObject.Find("BreakableWall").GetComponent<BreakableWall>().health--;
-                break;
-            case "Codeable":
-                //Do nothing 
-                break;
-            default:
-                Destroy(gameObject);
-                break;
+            switch (collision.gameObject.tag)
+            {
+                case "Player":
+                    Destroy(gameObject);
+                    if(scene_handler.lives < 3)
+                    {
+                        scene_handler.lives++;
+                    }
+                    break;
+                case "Codeable":
+                    //Do nothing 
+                    break;
+                default:
+                    Destroy(gameObject);
+                    break;
 
+            }
+        }
+        if(gameObject.tag == "HardAmmo")
+        {
+            switch (collision.gameObject.tag)
+            {
+                case "Player":
+                    Destroy(gameObject);
+                    scene_handler.lives--;
+                    break;
+                case "breakable":
+                    GameObject.Find("BreakableWall").GetComponent<BreakableWall>().health--;
+                    break;
+                case "Codeable":
+                    //Do nothing 
+                    break;
+                default:
+                    Destroy(gameObject);
+                    break;
+
+            }
         }
     }
 }

@@ -14,6 +14,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
         Float,
         Bool,
         GameObject,
+        Sprite,
         Any,
         None
     }
@@ -150,6 +151,20 @@ public class VariableSlot : MonoBehaviour, IDropHandler
                                     break;
                             }
                             break;
+                        case VariableType.Sprite:
+                            switch (item.itemVariableType)
+                            {
+                                case DragAndDropItem.ItemVariableType.Sprite:
+                                    SetItem(item, sourceCell);
+                                    handler.droppedSprite = item.sprite_prop;
+                                    handler.DoTheObjectThing();
+                                    break;
+                                default:
+                                    Debug.Log("ITEM NOT A SPRITE");
+                                    sceneHandler.lives--;
+                                    break;
+                            }
+                            break;
                         case VariableType.Any:
                             switch(item.itemVariableType)
                             {
@@ -167,6 +182,11 @@ public class VariableSlot : MonoBehaviour, IDropHandler
                                 case DragAndDropItem.ItemVariableType.GameObject:
                                     SetItem(item, sourceCell);
                                     handler.droppedGO = item.GO_prop;
+                                    handler.DoTheObjectThing();
+                                    break;
+                                case DragAndDropItem.ItemVariableType.Sprite:
+                                    SetItem(item, sourceCell);
+                                    handler.droppedSprite = item.sprite_prop;
                                     handler.DoTheObjectThing();
                                     break;
                                 default:
@@ -214,6 +234,9 @@ public class VariableSlot : MonoBehaviour, IDropHandler
                 break;
             case VariableType.GameObject:
                 GetComponent<Image>().color = Color.green;
+                break;
+            case VariableType.Sprite:
+                GetComponent<Image>().color = Color.yellow;
                 break;
             case VariableType.None:
                 GetComponent<Image>().color = Color.grey;
