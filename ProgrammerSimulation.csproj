@@ -304,6 +304,7 @@
     <Compile Include="Assets\MyScripts\Ammo.cs" />
     <Compile Include="Assets\MyScripts\BreakableWall.cs" />
     <Compile Include="Assets\MyScripts\CodeHandler.cs" />
+    <Compile Include="Assets\MyScripts\ColliderDetection.cs" />
     <Compile Include="Assets\MyScripts\EnemyObject.cs" />
     <Compile Include="Assets\MyScripts\LevelMenuHandler.cs" />
     <Compile Include="Assets\MyScripts\MovableObject.cs" />

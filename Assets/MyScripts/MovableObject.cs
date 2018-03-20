@@ -10,12 +10,24 @@ public class MovableObject : MonoBehaviour {
     ObjectSelection ObjInt;
     public CodeHandler handler;
 
-    List<GameObject> currentCollisions = new List<GameObject>();
+    public Collider2D[] detectionCols;
 
     // Use this for initialization
-    void Start () {
+    void Start ()
+    {
         ObjInt = GameObject.Find("Main Camera").GetComponent<ObjectSelection>();
-        //handler = ObjInt.activePanel.GetComponent<CodeHandler>();
+        detectionCols = gameObject.GetComponentsInChildren<Collider2D>();
+        foreach(Collider2D col in detectionCols)
+        {
+            if(col.transform.childCount > 0)
+            {
+                Debug.Log(col.gameObject.name + " is the parent");
+            }
+            else
+            {
+                col.enabled = false;
+            }
+        }
     }
 	
 	// Update is called once per frame
@@ -44,10 +56,50 @@ public class MovableObject : MonoBehaviour {
             case 'x':
                 newPos.x += variable;
                 moving = true;
+                if(variable > 0)
+                {
+                    foreach (Collider2D col in detectionCols)
+                    {
+                        if(col.gameObject.name == "rightCol")
+                        {
+                            col.enabled = true;
+                        }
+                    }
+                }
+                if(variable < 0)
+                {
+                    foreach (Collider2D col in detectionCols)
+                    {
+                        if (col.gameObject.name == "leftCol")
+                        {
+                            col.enabled = true;
+                        }
+                    }
+                }
                 break;
             case 'y':
                 newPos.y += variable;
                 moving = true;
+                if (variable > 0)
+                {
+                    foreach (Collider2D col in detectionCols)
+                    {
+                        if (col.gameObject.name == "topCol")
+                        {
+                            col.enabled = true;
+                        }
+                    }
+                }
+                if (variable < 0)
+                {
+                    foreach (Collider2D col in detectionCols)
+                    {
+                        if (col.gameObject.name == "bottomCol")
+                        {
+                            col.enabled = true;
+                        }
+                    }
+                }
                 break;
             default:
                 Debug.Log("Switch Case Error: undefined char");
@@ -58,42 +110,17 @@ public class MovableObject : MonoBehaviour {
     public void MoveBack()
     {
         gameObject.transform.position = previousPos;
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        //Note: probably dont need to check tag, we may want this for non codeable objects too
-        if (collision.gameObject.tag == "Codeable")
+        newPos = previousPos;
+        foreach (Collider2D col in detectionCols)
         {
-            currentCollisions.Add(collision.gameObject);
-            foreach (GameObject gObject in currentCollisions)
+            if (col.transform.childCount > 0)
             {
-                Debug.Log(gObject + " Collided");
+                Debug.Log(col.gameObject.name + " is the parent");
             }
-                moving = false;
-
-        }
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Codeable")
-        {
-            currentCollisions.Remove(collision.gameObject);
-            Debug.Log(collision + " Removed");
-            StartCoroutine(WaitForSeconds(1));
-            if(currentCollisions.Count <= 0)
+            else
             {
-                if (handler.FloatInCell)
-                {
-                    moving = true;
-                }
+                col.enabled = false;
             }
         }
-    }
-
-    IEnumerator WaitForSeconds(int seconds)
-    {
-        yield return new WaitForSeconds(seconds);
     }
 }

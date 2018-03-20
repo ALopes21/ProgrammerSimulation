@@ -104,8 +104,9 @@ public class VariableSlot : MonoBehaviour, IDropHandler
             {
                 DragAndDropItem item = DragAndDropItem.draggedItem;
                 VariableSlot sourceCell = DragAndDropItem.sourceCell;
-                if ((item != null)) //&& (sourceCell != this))
+                if ((item != null) && (sourceCell != this) && (isTaken == false))
                 {
+                    Debug.Log("Passed all checks: " + isTaken);
                     switch (variableType)                                       // Check this cell's type
                     {
                         case VariableType.Float:
