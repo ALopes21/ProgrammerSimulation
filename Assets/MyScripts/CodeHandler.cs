@@ -12,19 +12,14 @@ public class CodeHandler : MonoBehaviour {
     public GameObject droppedSprite;
 
     //References
-    public ObjectInteraction ObjInt;
+    public ObjectSelection ObjInt;
     public bool FloatInCell, BoolInCell, ObjInCell, SprInCell;
 
     // Use this for initialization
     void Start () {
-        ObjInt = GameObject.Find("Main Camera").GetComponent<ObjectInteraction>();
+        ObjInt = GameObject.Find("Main Camera").GetComponent<ObjectSelection>();
     }
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
     public void DoTheMoveThing()
     {
         MovableObject data = ObjInt.currentObject.GetComponent<MovableObject>();

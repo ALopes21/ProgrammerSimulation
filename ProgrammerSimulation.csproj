@@ -309,7 +309,7 @@
     <Compile Include="Assets\MyScripts\MovableObject.cs" />
     <Compile Include="Assets\MyScripts\ObjectChanger.cs" />
     <Compile Include="Assets\MyScripts\ObjectData.cs" />
-    <Compile Include="Assets\MyScripts\ObjectInteraction.cs" />
+    <Compile Include="Assets\MyScripts\ObjectSelection.cs" />
     <Compile Include="Assets\MyScripts\Persistence.cs" />
     <Compile Include="Assets\MyScripts\SceneHandler.cs" />
     <Compile Include="Assets\MyScripts\VariableSlot.cs" />

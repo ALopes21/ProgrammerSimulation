@@ -13,7 +13,7 @@ public class EnemyObject : MonoBehaviour {
     // Use this for initialization
     void Start () {
         shootCooldown = 0f;
-        handler = GameObject.Find("Finishline").GetComponent<SceneHandler>();
+        handler = GameObject.Find("Main Camera").GetComponent<SceneHandler>();
     }
 
     // Update is called once per frame

@@ -11,7 +11,6 @@ public class SceneHandler : MonoBehaviour
     public bool Unclocked;
     public int lives;
 
-    bool triggered;
     public GameObject[] Stars;
     public GameObject[] Lives;
     public Sprite Star, NoStar, EmptyLife, FullLife;
@@ -35,7 +34,6 @@ public class SceneHandler : MonoBehaviour
 
         StarNumber = 3;
         lives = 3;
-        triggered = false;
         gameOver = false;
         for (int i= 0; i < Stars.Length; i++)
         {
@@ -50,14 +48,10 @@ public class SceneHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(this.gameObject.name == "Finishline")
+        if(!gameOver)
         {
-            if(!gameOver)
-            {
-                IconHandler();
-            }
+            IconHandler();
         }
-        
     }
 
     public void IconHandler()
@@ -162,26 +156,6 @@ public class SceneHandler : MonoBehaviour
         newLevel.Time = myTime;
         newLevel.currentLevel = SceneNumber++;
         Persistence.UpdateLevelList(LevelData.current);
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (!triggered)
-        {
-            triggered = true;
-            if (other.tag == "Player")
-            {
-                switch (this.gameObject.name)
-                {
-                    case "Finishline":
-                        SceneManager.LoadScene(0);
-                        UpdateLevelInfo();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
     }
 
     public void LoadScene(int sceneIndex)

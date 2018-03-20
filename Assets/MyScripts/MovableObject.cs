@@ -7,14 +7,14 @@ public class MovableObject : MonoBehaviour {
     public Vector2 newPos;
     public bool moving;
     public Vector2 previousPos;
-    ObjectInteraction ObjInt;
+    ObjectSelection ObjInt;
     public CodeHandler handler;
 
     List<GameObject> currentCollisions = new List<GameObject>();
 
     // Use this for initialization
     void Start () {
-        ObjInt = GameObject.Find("Main Camera").GetComponent<ObjectInteraction>();
+        ObjInt = GameObject.Find("Main Camera").GetComponent<ObjectSelection>();
         //handler = ObjInt.activePanel.GetComponent<CodeHandler>();
     }
 	

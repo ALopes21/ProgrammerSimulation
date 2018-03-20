@@ -48,7 +48,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
     {
         //SetBackgroundState(GetComponentInChildren<DragAndDropItem>() == null ? false : true);
         SetBackgroundState(variableType);
-        sceneHandler = GameObject.Find("Finishline").GetComponent<SceneHandler>();
+        sceneHandler = GameObject.Find("Main Camera").GetComponent<SceneHandler>();
     }
 
     /// <summary>
@@ -96,7 +96,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
     /// <param name="data"></param>
     public void OnDrop(PointerEventData data)
     {
-        handler = GameObject.Find("Main Camera").GetComponent<ObjectInteraction>().activePanel.GetComponent<CodeHandler>();
+        handler = GameObject.Find("Main Camera").GetComponent<ObjectSelection>().activePanel.GetComponent<CodeHandler>();
 
         if (DragAndDropItem.icon != null)
         {

@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
 namespace UnityStandardAssets.Utility
@@ -26,16 +25,19 @@ namespace UnityStandardAssets.Utility
         public int triggerCount = 1;
         public bool repeatTrigger = false;
 
+        //Added
         public GameObject[] slots;
         public GameObject[] items;
+        public SceneHandler handler;
 
 
         private void Start()
         {
             items = GameObject.FindGameObjectsWithTag("Item");
+            handler = GameObject.Find("Main Camera").GetComponent<SceneHandler>();
         }
 
-        private void DoActivateTrigger()
+        private void DoActivateTrigger(Collider2D col)
         {
             triggerCount--;
 
@@ -69,12 +71,20 @@ namespace UnityStandardAssets.Utility
                         }
                         break;
                     case Mode.Activate:
-                        if (targetGameObject != null)
+                        if(col.tag == "Player")
                         {
-                            targetGameObject.SetActive(true);
-                            if(this.gameObject.name == "Killzone")
+                            switch (this.gameObject.name)
                             {
-                                GameObject.Find("Finishline").GetComponent<SceneHandler>().gameOver = true;
+                                case "Finishline":
+                                    handler.LoadScene(0);
+                                    handler.UpdateLevelInfo();
+                                    break;
+                                case "Killzone":
+                                    targetGameObject.SetActive(true);
+                                    handler.gameOver = true;
+                                    break;
+                                default:
+                                    break;
                             }
                         }
                         break;
@@ -119,7 +129,7 @@ namespace UnityStandardAssets.Utility
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            DoActivateTrigger();
+            DoActivateTrigger(other);
         }
     }
 }

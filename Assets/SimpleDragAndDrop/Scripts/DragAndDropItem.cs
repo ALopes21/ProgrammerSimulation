@@ -38,8 +38,6 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     void Start()
     {
-
-
         switch (itemVariableType)
         {
             case ItemVariableType.Float:
@@ -64,7 +62,6 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 break;
             default:
                 break;
-
         }
     }
 

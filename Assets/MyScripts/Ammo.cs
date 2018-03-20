@@ -10,7 +10,7 @@ public class Ammo : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        scene_handler = GameObject.Find("Finishline").GetComponent<SceneHandler>();
+        scene_handler = GameObject.Find("Main Camera").GetComponent<SceneHandler>();
 	}
 	
 	// Update is called once per frame

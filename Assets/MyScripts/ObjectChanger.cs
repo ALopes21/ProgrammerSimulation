@@ -8,15 +8,6 @@ public class ObjectChanger : MonoBehaviour {
     public GameObject newTarget, prevTarget;
     public GameObject newObject, prevObject;
 
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
     public void ToggleCollider()
     {
         Collider2D col = gameObject.GetComponent<Collider2D>();
