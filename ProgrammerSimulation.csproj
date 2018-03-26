@@ -303,19 +303,20 @@
     <Compile Include="Assets\MyScripts\ActivateTrigger.cs" />
     <Compile Include="Assets\MyScripts\Ammo.cs" />
     <Compile Include="Assets\MyScripts\BreakableWall.cs" />
-    <Compile Include="Assets\MyScripts\CodeHandler.cs" />
-    <Compile Include="Assets\MyScripts\ColliderDetection.cs" />
-    <Compile Include="Assets\MyScripts\EnemyObject.cs" />
-    <Compile Include="Assets\MyScripts\LevelMenuHandler.cs" />
-    <Compile Include="Assets\MyScripts\MovableObject.cs" />
-    <Compile Include="Assets\MyScripts\ObjectChanger.cs" />
-    <Compile Include="Assets\MyScripts\ObjectData.cs" />
-    <Compile Include="Assets\MyScripts\ObjectSelection.cs" />
-    <Compile Include="Assets\MyScripts\Persistence.cs" />
-    <Compile Include="Assets\MyScripts\SceneHandler.cs" />
-    <Compile Include="Assets\MyScripts\VariableSlot.cs" />
+    <Compile Include="Assets\MyScripts\Handlers\CodeHandler.cs" />
+    <Compile Include="Assets\MyScripts\Handlers\LevelMenuHandler.cs" />
+    <Compile Include="Assets\MyScripts\Handlers\ObjectSelection.cs" />
+    <Compile Include="Assets\MyScripts\Handlers\Persistence.cs" />
+    <Compile Include="Assets\MyScripts\Handlers\SceneHandler.cs" />
+    <Compile Include="Assets\MyScripts\Handlers\VariableSlot.cs" />
+    <Compile Include="Assets\MyScripts\Handlers\VariableValueHandler.cs" />
+    <Compile Include="Assets\MyScripts\ItemScripts\ColliderDetection.cs" />
+    <Compile Include="Assets\MyScripts\ItemScripts\DragAndDropItem.cs" />
+    <Compile Include="Assets\MyScripts\ItemScripts\EnemyObject.cs" />
+    <Compile Include="Assets\MyScripts\ItemScripts\MovableObject.cs" />
+    <Compile Include="Assets\MyScripts\ItemScripts\ObjectChanger.cs" />
+    <Compile Include="Assets\MyScripts\VariableType.cs" />
     <Compile Include="Assets\SimpleDragAndDrop\Scripts\DragAndDropCell.cs" />
-    <Compile Include="Assets\SimpleDragAndDrop\Scripts\DragAndDropItem.cs" />
     <Compile Include="Assets\SimpleDragAndDrop\Scripts\DummyControlUnit.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -308,6 +308,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Editor\EditorList.cs" />
     <Compile Include="Assets\Editor\ItemHolder.cs" />
   </ItemGroup>
   <ItemGroup>
