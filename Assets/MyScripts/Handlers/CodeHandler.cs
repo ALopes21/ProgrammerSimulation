@@ -34,15 +34,15 @@ public class CodeHandler : MonoBehaviour {
         data.ToggleCollider(droppedBool);
     }
 
-    public void DoTheObjectThing()
+    public void DoTheObjectThing(GameObject Obj)
     {
         ObjectChanger data = ObjInt.currentObject.GetComponent<ObjectChanger>();
-        if (droppedGO != null)
+        if (droppedGO == Obj)
         {
             data.newTarget = droppedGO;
             data.ChangeTarget();
         }
-        if(droppedSprite != null)
+        if(droppedSprite == Obj)
         {
             data.newObject = droppedSprite;
             data.ChangeSprite();
@@ -65,12 +65,12 @@ public class CodeHandler : MonoBehaviour {
                 break;
             case VariableType.Type.GameObject:
                 ObjChangData = ObjInt.currentObject.GetComponent<ObjectChanger>();
-                ObjChangData.newTarget = ObjChangData.prevTarget;
+                ObjChangData.newTarget = ObjChangData.originalTarget;
                 ObjChangData.ChangeTarget();
                 break;
             case VariableType.Type.Sprite:
                 ObjChangData = ObjInt.currentObject.GetComponent<ObjectChanger>();
-                ObjChangData.newObject = ObjChangData.prevObject;
+                ObjChangData.newObject = ObjChangData.originalObject;
                 ObjChangData.ChangeSprite();
                 break;
             default:

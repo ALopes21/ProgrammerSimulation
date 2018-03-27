@@ -76,19 +76,35 @@ public class VariableValueHandler : MonoBehaviour
             case VariableType.Type.Float:
                 handler.droppedFloat = item.float_prop;
                 handler.droppedChar = item.char_prop;
+                SetupItemImage(item, Color.blue, item.float_prop.ToString());
                 handler.DoTheMoveThing();
+                break;
+            case VariableType.Type.Char:
+                handler.droppedChar = item.char_prop;
+                SetupItemImage(item, Color.red, item.char_prop.ToString());
+                //handler.DoTheMoveThing();
                 break;
             case VariableType.Type.Bool:
                 handler.droppedBool = item.bool_prop;
+                if (item.bool_prop == true)
+                {
+                    SetupItemImage(item, Color.green, "T");
+                }
+                else if (item.bool_prop == false)
+                {
+                    SetupItemImage(item, Color.red, "F");
+                }
                 handler.DoTheColliderThing();
                 break;
             case VariableType.Type.GameObject:
                 handler.droppedGO = item.GO_prop;
-                handler.DoTheObjectThing();
+                SetupItemImage(item, Color.white, item.GO_prop.name);
+                handler.DoTheObjectThing(handler.droppedGO);
                 break;
             case VariableType.Type.Sprite:
                 handler.droppedSprite = item.sprite_prop;
-                handler.DoTheObjectThing();
+                SetupItemImage(item, Color.white, item.sprite_prop.name);
+                handler.DoTheObjectThing(handler.droppedSprite);
                 break;
             default:
                 Debug.Log("An error occurred");
@@ -106,6 +122,12 @@ public class VariableValueHandler : MonoBehaviour
                 foreach (float f in item.floatList_prop)
                 {
                     values.Add(f.ToString());
+                }
+                break;
+            case VariableType.Type.Char:
+                foreach (char c in item.charList_prop)
+                {
+                    values.Add(c.ToString());
                 }
                 break;
             case VariableType.Type.Bool:
@@ -144,5 +166,40 @@ public class VariableValueHandler : MonoBehaviour
         item.dropdown.ClearOptions();
         item.dropdown.AddOptions(list);
         item.dropdown.RefreshShownValue();
+    }
+
+    public void SetupItemImage(DragAndDropItem item, Color color, string display)
+    {
+        switch (item.itemVariableType)
+        {
+            case VariableType.Type.Float:
+                item.gameObject.GetComponent<Image>().color = color; //gameObject.GetComponent<Image>().sprite = FloatSprite;
+                item.gameObject.GetComponentInChildren<Text>().text = display;
+                break;
+            case VariableType.Type.Char:
+                item.gameObject.GetComponent<Image>().color = color; //gameObject.GetComponent<Image>().sprite = FloatSprite;
+                item.gameObject.GetComponentInChildren<Text>().text = display;
+                break;
+            case VariableType.Type.Bool:
+                item.gameObject.GetComponent<Image>().color = color; //gameObject.GetComponent<Image>().sprite = BoolSprite;
+                item.gameObject.GetComponentInChildren<Text>().text = display;
+                break;
+            case VariableType.Type.GameObject:
+                item.gameObject.GetComponent<Image>().color = color;
+                item.gameObject.GetComponent<Image>().sprite = (Sprite)Resources.Load("ItemSprites/" + display, typeof(Sprite));
+                item.gameObject.GetComponentInChildren<Text>().text = "";
+                break;
+            case VariableType.Type.Sprite:
+                item.gameObject.GetComponent<Image>().color = color;
+                item.gameObject.GetComponent<Image>().sprite = (Sprite)Resources.Load("ItemSprites/" + display, typeof(Sprite));
+                item.gameObject.GetComponentInChildren<Text>().text = "";
+                break;
+            case VariableType.Type.Any:
+                item.gameObject.GetComponent<Image>().color = color; //gameObject.GetComponent<Image>().sprite = AnySprite;
+                item.gameObject.GetComponentInChildren<Text>().text = display;
+                break;
+            default:
+                break;
+        }
     }
 }

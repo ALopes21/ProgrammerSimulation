@@ -118,6 +118,9 @@ public class VariableSlot : MonoBehaviour, IDropHandler
             case VariableType.Type.Float:
                 GetComponent<Image>().color = Color.blue;
                 break;
+            case VariableType.Type.Char:
+                GetComponent<Image>().color = Color.red;
+                break;
             case VariableType.Type.GameObject:
                 GetComponent<Image>().color = Color.magenta;
                 break;

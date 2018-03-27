@@ -13,8 +13,8 @@ public class LevelMenuHandler : MonoBehaviour
     private void Start()
     {
         Persistence.Load();
-        Star = (Sprite)Resources.Load("Star", typeof(Sprite));
-        NoStar = (Sprite)Resources.Load("NoStar", typeof(Sprite));
+        Star = (Sprite)Resources.Load("UISprites/Star", typeof(Sprite));
+        NoStar = (Sprite)Resources.Load("UISprites/NoStar", typeof(Sprite));
         for(int i = 0; i < gameObject.transform.childCount; i++ )
         {
             if (gameObject.transform.GetChild(i).tag == "LevelButton")
@@ -28,9 +28,6 @@ public class LevelMenuHandler : MonoBehaviour
         }
 
         SetupMenuItems();
-    }
-    private void FixedUpdate()
-    {
     }
 
     public void SetupMenuItems()

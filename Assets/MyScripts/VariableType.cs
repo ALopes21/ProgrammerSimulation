@@ -7,6 +7,7 @@ public class VariableType : MonoBehaviour {
     public enum Type
     {
         Float,
+        Char,
         Bool,
         GameObject,
         Sprite,

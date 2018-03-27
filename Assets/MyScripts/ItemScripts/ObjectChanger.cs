@@ -6,8 +6,8 @@ public class ObjectChanger : MonoBehaviour {
 
     public Sprite Disabled, Enabled;
     public bool originalBool;
-    public GameObject newTarget, prevTarget;
-    public GameObject newObject, prevObject;
+    public GameObject newTarget, originalTarget;
+    public GameObject newObject, originalObject;
 
     public void ToggleCollider(bool value)
     {
@@ -32,7 +32,6 @@ public class ObjectChanger : MonoBehaviour {
     public void ChangeTarget()
     {
         EnemyObject enemy = gameObject.GetComponent<EnemyObject>();
-        prevTarget = enemy.target;
         enemy.target = newTarget;
     }
 
@@ -41,7 +40,6 @@ public class ObjectChanger : MonoBehaviour {
         if(gameObject.name == "Enemy")
         {
             EnemyObject enemy = gameObject.GetComponent<EnemyObject>();
-            prevObject = enemy.ammo;
             enemy.ammo = newObject;
         }
     }

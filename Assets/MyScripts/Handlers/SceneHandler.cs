@@ -23,11 +23,11 @@ public class SceneHandler : MonoBehaviour
         ErrorPanel = GameObject.Find("ErrorPanel");
         ErrorPanel.SetActive(false);
 
-        Star = (Sprite)Resources.Load("Star", typeof(Sprite));
-        NoStar = (Sprite)Resources.Load("NoStar", typeof(Sprite));
+        Star = (Sprite)Resources.Load("UISprites/Star", typeof(Sprite));
+        NoStar = (Sprite)Resources.Load("UISprites/NoStar", typeof(Sprite));
 
-        EmptyLife = (Sprite)Resources.Load("EmptyLife", typeof(Sprite));
-        FullLife = (Sprite)Resources.Load("FullLife", typeof(Sprite));
+        EmptyLife = (Sprite)Resources.Load("UISprites/EmptyLife", typeof(Sprite));
+        FullLife = (Sprite)Resources.Load("UISprites/FullLife", typeof(Sprite));
 
         Stars = GameObject.FindGameObjectsWithTag("InGameStars");
         Lives = GameObject.FindGameObjectsWithTag("InGameLives");

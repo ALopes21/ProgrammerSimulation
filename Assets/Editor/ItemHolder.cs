@@ -51,6 +51,9 @@ public class ItemHolder : Editor
                         floatProp.floatValue = EditorGUILayout.FloatField("FloatProp", floatProp.floatValue, GUILayout.MinWidth(50));
                         EditorGUILayout.PropertyField(charProp, new GUIContent("CharProp"));
                         break;
+                    case VariableType.Type.Char:
+                        EditorGUILayout.PropertyField(charProp, new GUIContent("CharProp"));
+                        break;
                     case VariableType.Type.Bool:
                         EditorGUILayout.PropertyField(boolProp, new GUIContent("BoolProp"));
                         break;
@@ -69,6 +72,10 @@ public class ItemHolder : Editor
                 {
                     case VariableType.Type.Float:
                         EditorList.Show(serializedObject.FindProperty("floatList_prop"), EditorListOption.ListLabel | EditorListOption.Buttons);
+                        EditorGUILayout.PropertyField(charProp, new GUIContent("CharProp"));
+                        break;
+                    case VariableType.Type.Char:
+                        EditorList.Show(serializedObject.FindProperty("charList_prop"), EditorListOption.ListLabel | EditorListOption.Buttons);
                         EditorGUILayout.PropertyField(charProp, new GUIContent("CharProp"));
                         break;
                     case VariableType.Type.Bool:

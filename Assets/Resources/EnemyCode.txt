@@ -1,5 +1,0 @@
-void EnemyAttack(GameObject Ammo, GameObject target)
-{
-	GameObject ActiveAmmo = Instantiate(Ammo);
-	ActiveAmmo.transform.position = Vector2.MoveTowards(target);
-}

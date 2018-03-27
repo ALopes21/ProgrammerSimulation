@@ -32,9 +32,8 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public GameObject[] spriteList_prop;
 
     //Original Sprites, Colors and Text of the item
-    //public Sprite FloatSprite, BoolSprite, CharSprite, GOSprite, SprSprite;
     public Color originalColor; //public Sprite OriginalSprite;
-    public string originalString;
+    public string originalString = "";
 
     public VariableType.Type itemVariableType = VariableType.Type.Float;
     public ItemType itemType = ItemType.Basic;
@@ -60,33 +59,64 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         {
             gameObject.GetComponent<Button>().interactable = false;
         }
+        SetUpStartProp();
+    }
 
+    void SetUpStartProp()
+    {
         //Change from Color to Sprite
         switch (itemVariableType)
         {
             case VariableType.Type.Float:
                 originalColor = Color.blue;
-                originalString = "0";
+                originalString = "F";
+                if(itemType == ItemType.Basic)
+                {
+                    originalString = float_prop.ToString();
+                }
+                break;
+            case VariableType.Type.Char:
+                originalColor = Color.red;
+                originalString = "C";
+                if (itemType == ItemType.Basic)
+                {
+                    originalString = char_prop.ToString();
+                }
                 break;
             case VariableType.Type.Bool:
-                if(bool_prop == true)
+                originalColor = Color.cyan;
+                originalString = "B";
+                if(itemType == ItemType.Basic)
                 {
-                    originalColor = Color.green;
-                    originalString = "T";
-                }
-                else if(bool_prop == false)
-                {
-                    originalColor = Color.red;
-                    originalString = "F";
+                    if (bool_prop == true)
+                    {
+                        originalColor = Color.green;
+                        originalString = "T";
+                    }
+                    else if (bool_prop == false)
+                    {
+                        originalColor = Color.red;
+                        originalString = "F";
+                    }
                 }
                 break;
             case VariableType.Type.GameObject:
                 originalColor = Color.magenta;
                 originalString = "Obj";
+                if (itemType == ItemType.Basic)
+                {
+                    originalColor = Color.white;
+                    originalString = GO_prop.name;
+                }
                 break;
             case VariableType.Type.Sprite:
                 originalColor = Color.yellow;
-                originalString = "Spr";
+                originalString = "Obj";
+                if (itemType == ItemType.Basic)
+                {
+                    originalColor = Color.white;
+                    originalString = sprite_prop.name;
+                }
                 break;
             case VariableType.Type.Any:
                 originalColor = Color.grey;
@@ -95,8 +125,7 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             default:
                 break;
         }
-
-        SetupItemImage(originalColor, originalString);
+        valueHandler.SetupItemImage(this, originalColor, originalString);
     }
 
     /// <summary>
@@ -193,26 +222,18 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             {
                 case VariableType.Type.Float:
                     float_prop = floatList_prop[value];
-                    SetupItemImage(Color.blue, float_prop.ToString());
+                    break;
+                case VariableType.Type.Char:
+                    char_prop = charList_prop[value];
                     break;
                 case VariableType.Type.Bool:
                     bool_prop = boolList_prop[value];
-                    if (bool_prop == true)
-                    {
-                        SetupItemImage(Color.green, "T");
-                    }
-                    else if (bool_prop == false)
-                    {
-                        SetupItemImage(Color.red, "F");
-                    }
                     break;
                 case VariableType.Type.GameObject:
                     GO_prop = gameObjectList_prop[value];
-                    SetupItemImage(Color.magenta, GO_prop.name);
                     break;
                 case VariableType.Type.Sprite:
                     sprite_prop = spriteList_prop[value];
-                    SetupItemImage(Color.yellow, sprite_prop.name);
                     break;
                 case VariableType.Type.Any:
                     //leave this for now > Set type and value
@@ -228,7 +249,7 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         {
             codeHandler = GameObject.Find("Main Camera").GetComponent<ObjectSelection>().activePanel.GetComponent<CodeHandler>();
             codeHandler.BackPeddle(this);
-            SetupItemImage(originalColor, originalString);
+            valueHandler.SetupItemImage(this, originalColor, originalString);
             StartCoroutine(DisableDropdown(0.2f, true));
         }
        
@@ -244,32 +265,4 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         dropdown.gameObject.SetActive(false);
     }
 
-    public void SetupItemImage(Color color, string display)
-    {
-        switch (itemVariableType)
-        {
-            case VariableType.Type.Float:
-                gameObject.GetComponent<Image>().color = color; //gameObject.GetComponent<Image>().sprite = FloatSprite;
-                gameObject.GetComponentInChildren<Text>().text = display;
-                break;
-            case VariableType.Type.Bool:
-                gameObject.GetComponent<Image>().color = color; //gameObject.GetComponent<Image>().sprite = BoolSprite;
-                gameObject.GetComponentInChildren<Text>().text = display;
-                break;
-            case VariableType.Type.GameObject:
-                gameObject.GetComponent<Image>().color = color; //gameObject.GetComponent<Image>().sprite = GOSprite;
-                gameObject.GetComponentInChildren<Text>().text = display;
-                break;
-            case VariableType.Type.Sprite:
-                gameObject.GetComponent<Image>().color = color; //gameObject.GetComponent<Image>().sprite = SprSprite;
-                gameObject.GetComponentInChildren<Text>().text = display;
-                break;
-            case VariableType.Type.Any:
-                gameObject.GetComponent<Image>().color = color; //gameObject.GetComponent<Image>().sprite = AnySprite;
-                gameObject.GetComponentInChildren<Text>().text = display;
-                break;
-            default:
-                break;
-        }
-    }
 }
