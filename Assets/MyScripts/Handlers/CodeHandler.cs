@@ -2,18 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GenericClass<T>
+public class GenericClass
 {
-    static public T ifobj, condition, thenobj, action;
-    static public T basicValue;
+    static public object condition, thenobj, action;
+    static public object basicValue;
 
-    public void SetConditions(VariableSlot slot, T value)
+    public void SetConditions(VariableSlot slot, object value)
     {
         switch (slot.thisConditionType)
         {
-            case VariableSlot.ConditionType.If:
-                ifobj = value;
-                break;
             case VariableSlot.ConditionType.That:
                 condition = value;
                 break;
@@ -25,12 +22,13 @@ public class GenericClass<T>
                 break;
         }
     }
-    public void SetValues(VariableSlot slot, T value)
+    public void SetValues(VariableSlot slot, object value)
     {
         switch(slot.thisSlotType)
         {
             case VariableSlot.SlotType.Basic:
                 basicValue = value;
+                Debug.Log(basicValue.GetType().Name);
                 break;
             case VariableSlot.SlotType.Conditional:
                 SetConditions(slot, value);
@@ -54,39 +52,38 @@ public class CodeHandler : MonoBehaviour {
 	
     public void DoTheMoveThing()
     {
-        Debug.Log(GenericClass<float>.basicValue + " , " +  charValue);
         MovableObject data = ObjInt.currentObject.GetComponent<MovableObject>();
-        if (GenericClass<float>.basicValue != 0 && (charValue == 'y' || charValue == 'x'))
+        if ((float)GenericClass.basicValue != 0 && (charValue == 'y' || charValue == 'x'))
         {
-            data.MoveObject(GenericClass<float>.basicValue, charValue);
+            data.MoveObject((float)GenericClass.basicValue, charValue);
         }
     }
 
     public void DoTheColliderThing()
     {
-        Debug.Log(GenericClass<bool>.basicValue);
         ObjectChanger data = ObjInt.currentObject.GetComponent<ObjectChanger>();
-        data.ToggleCollider(GenericClass<bool>.basicValue);
+        data.ToggleCollider((bool)GenericClass.basicValue);
     }
 
     public void DoTheObjectThing()
     {
         ObjectChanger data = ObjInt.currentObject.GetComponent<ObjectChanger>();
-        data.newTarget = GenericClass<GameObject>.basicValue;
+        data.newTarget = (GameObject)GenericClass.basicValue;
         data.ChangeTarget();
     }
 
     public void DoTheSpriteThing()
     {
         ObjectChanger data = ObjInt.currentObject.GetComponent<ObjectChanger>();
-        data.newObject = GenericClass<GameObject>.basicValue;
+        data.newObject = (GameObject)GenericClass.basicValue;
         data.ChangeSprite();
     }
 
     public void DoTheConditionThing()
     {
-        //Dosometing
-        Debug.Log("Condition: " );
+        Debug.Log("Run Condition: " + GenericClass.condition + " : " + GenericClass.thenobj + " : " + GenericClass.action);
+        ObjectChanger data = ObjInt.currentObject.GetComponent<ObjectChanger>();
+        data.RunCondition(GenericClass.condition, GenericClass.thenobj, GenericClass.action);
     }
 
     public void BackPeddle(DragAndDropItem item)

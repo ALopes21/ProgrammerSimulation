@@ -9,9 +9,7 @@ public class VariableValueHandler : MonoBehaviour
     CodeHandler handler;
     SceneHandler sceneHandler;
 
-    GenericClass<float> floatClass = new GenericClass<float>();
-    GenericClass<bool> boolClass = new GenericClass<bool>();
-    GenericClass<GameObject> GOClass = new GenericClass<GameObject>();
+    GenericClass Class = new GenericClass();
 
     private void Start()
     {
@@ -157,7 +155,7 @@ public class VariableValueHandler : MonoBehaviour
         switch (item.itemVariableType)
         {
             case VariableType.Type.Float:
-                floatClass.SetValues(slot, item.float_prop);
+                Class.SetValues(slot, item.float_prop);
                 handler.charValue = item.char_prop;
                 SetupItemImage(item, Color.blue, item.float_prop.ToString());
                 handler.functionString = "DoTheMoveThing";
@@ -169,7 +167,7 @@ public class VariableValueHandler : MonoBehaviour
                 //handler.DoTheMoveThing();
                 break;
             case VariableType.Type.Bool:
-                boolClass.SetValues(slot, item.bool_prop);
+                Class.SetValues(slot, item.bool_prop);
                 if (item.bool_prop == true)
                 {
                     SetupItemImage(item, Color.green, "T");
@@ -181,12 +179,12 @@ public class VariableValueHandler : MonoBehaviour
                 handler.functionString = "DoTheColliderThing";
                 break;
             case VariableType.Type.GameObject:
-                GOClass.SetValues(slot, item.GO_prop);
+                Class.SetValues(slot, item.GO_prop);
                 SetupItemImage(item, Color.white, item.GO_prop.name);
                 handler.functionString = "DoTheObjectThing";
                 break;
             case VariableType.Type.Sprite:
-                GOClass.SetValues(slot, item.sprite_prop);
+                Class.SetValues(slot, item.sprite_prop);
                 SetupItemImage(item, Color.white, item.sprite_prop.name);
                 handler.functionString = "DoTheObjectThing";
                 break;

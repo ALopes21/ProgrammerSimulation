@@ -21,7 +21,8 @@ public class VariableSlot : MonoBehaviour, IDropHandler
         If,
         This,
         Then,
-        That
+        That,
+        None
     }
 
     public SlotType thisSlotType = SlotType.Basic;
@@ -31,6 +32,8 @@ public class VariableSlot : MonoBehaviour, IDropHandler
     public DragAndDropItem parentItem;
 
     VariableValueHandler valueHandler;
+
+    ObjectSelection ObjInt;
 
     public struct DropDescriptor                                            // Struct with info about item's drop event
     {
@@ -56,6 +59,12 @@ public class VariableSlot : MonoBehaviour, IDropHandler
         //SetBackgroundState(GetComponentInChildren<DragAndDropItem>() == null ? false : true);
         SetBackgroundState(slotVariableType);
         valueHandler = GameObject.Find("Main Camera").GetComponent<VariableValueHandler>();
+        ObjInt = GameObject.Find("Main Camera").GetComponent<ObjectSelection>();
+        if (thisConditionType == ConditionType.If)
+        {
+           GetComponent<Image>().sprite = (Sprite)Resources.Load("SlotSprites/" + ObjInt.currentObject.ToString(), typeof(Sprite));
+            GetComponent<VariableSlot>().enabled = false; 
+        }
     }
 
     /// <summary>

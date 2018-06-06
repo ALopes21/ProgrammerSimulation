@@ -9,6 +9,18 @@ public class ObjectChanger : MonoBehaviour {
     public GameObject newTarget, originalTarget;
     public GameObject newObject, originalObject;
 
+    public GameObject Cousin;
+
+    public enum Conditions
+    {
+        BoolToBool,
+        BoolToFloat,
+        FloatToBool,
+        FloatToFloat
+    }
+
+    public Conditions thisCondition = Conditions.BoolToBool;
+
     public void ToggleCollider(bool value)
     {
         Collider2D col = gameObject.GetComponent<Collider2D>();
@@ -41,6 +53,31 @@ public class ObjectChanger : MonoBehaviour {
         {
             EnemyObject enemy = gameObject.GetComponent<EnemyObject>();
             enemy.ammo = newObject;
+        }
+    }
+
+    public void RunCondition(object condition, object thenObject, object action)
+    {
+        switch(thisCondition)
+        {
+            case Conditions.BoolToBool:
+                Debug.Log(thenObject.GetType().Name.ToString());
+                if(thenObject.GetType().Name == "GameObject")
+                {
+                    Debug.Log(condition.GetType().Name.ToString() + " : " + action.GetType().Name.ToString());
+                    if (condition.GetType().Name == "Boolean" && action.GetType().Name == "Boolean")
+                    {
+                        if(GetComponent<Collider2D>().enabled == (bool)condition)
+                        {
+                            Cousin = (GameObject)thenObject;
+                            Cousin.GetComponent<Collider2D>().enabled = (bool)action;
+                            Debug.Log("Affect Cousin: " + Cousin + " : " + action);
+                        }
+                    }
+                }
+                break;
+            case Conditions.BoolToFloat:
+                break;
         }
     }
 }
