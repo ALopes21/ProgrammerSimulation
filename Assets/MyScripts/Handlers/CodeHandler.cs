@@ -2,14 +2,47 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public class GenericClass<T>
+{
+    static public T ifobj, condition, thenobj, action;
+    static public T basicValue;
+
+    public void SetConditions(VariableSlot slot, T value)
+    {
+        switch (slot.thisConditionType)
+        {
+            case VariableSlot.ConditionType.If:
+                ifobj = value;
+                break;
+            case VariableSlot.ConditionType.That:
+                condition = value;
+                break;
+            case VariableSlot.ConditionType.Then:
+                thenobj = value;
+                break;
+            case VariableSlot.ConditionType.This:
+                action = value;
+                break;
+        }
+    }
+    public void SetValues(VariableSlot slot, T value)
+    {
+        switch(slot.thisSlotType)
+        {
+            case VariableSlot.SlotType.Basic:
+                basicValue = value;
+                break;
+            case VariableSlot.SlotType.Conditional:
+                SetConditions(slot, value);
+                break;
+        }
+    }
+}
+
 public class CodeHandler : MonoBehaviour {
 
-    //Variables
-    public float droppedFloat;
-    public char droppedChar;
-    public bool droppedBool;
-    public GameObject droppedGO;
-    public GameObject droppedSprite;
+    public string functionString;
+    public char charValue;
 
     //References
     public ObjectSelection ObjInt;
@@ -21,32 +54,39 @@ public class CodeHandler : MonoBehaviour {
 	
     public void DoTheMoveThing()
     {
+        Debug.Log(GenericClass<float>.basicValue + " , " +  charValue);
         MovableObject data = ObjInt.currentObject.GetComponent<MovableObject>();
-        if (droppedFloat != 0 && (droppedChar == 'y' || droppedChar == 'x'))
+        if (GenericClass<float>.basicValue != 0 && (charValue == 'y' || charValue == 'x'))
         {
-            data.MoveObject(droppedFloat, droppedChar);
+            data.MoveObject(GenericClass<float>.basicValue, charValue);
         }
     }
 
     public void DoTheColliderThing()
     {
+        Debug.Log(GenericClass<bool>.basicValue);
         ObjectChanger data = ObjInt.currentObject.GetComponent<ObjectChanger>();
-        data.ToggleCollider(droppedBool);
+        data.ToggleCollider(GenericClass<bool>.basicValue);
     }
 
-    public void DoTheObjectThing(GameObject Obj)
+    public void DoTheObjectThing()
     {
         ObjectChanger data = ObjInt.currentObject.GetComponent<ObjectChanger>();
-        if (droppedGO == Obj)
-        {
-            data.newTarget = droppedGO;
-            data.ChangeTarget();
-        }
-        if(droppedSprite == Obj)
-        {
-            data.newObject = droppedSprite;
-            data.ChangeSprite();
-        }
+        data.newTarget = GenericClass<GameObject>.basicValue;
+        data.ChangeTarget();
+    }
+
+    public void DoTheSpriteThing()
+    {
+        ObjectChanger data = ObjInt.currentObject.GetComponent<ObjectChanger>();
+        data.newObject = GenericClass<GameObject>.basicValue;
+        data.ChangeSprite();
+    }
+
+    public void DoTheConditionThing()
+    {
+        //Dosometing
+        Debug.Log("Condition: " );
     }
 
     public void BackPeddle(DragAndDropItem item)
@@ -76,5 +116,11 @@ public class CodeHandler : MonoBehaviour {
             default:
                 break;
         } 
+    }
+
+    public void ConditionalBackPeddle(DragAndDropItem item)
+    {
+        //Do Something
+        Debug.Log("ConditionBackPeddle: ");
     }
 }

@@ -18,10 +18,12 @@ public class ItemHolder : Editor
 
     SerializedProperty itemTypeProp;
 
+    SerializedProperty conditionalslots;
+
     void OnEnable()
     {
         itemTypeProp = serializedObject.FindProperty("itemType");
-
+        
         // Setup the SerializedProperties.
         itemVariableTypeProp = serializedObject.FindProperty("itemVariableType");
         floatProp = serializedObject.FindProperty("float_prop");
@@ -29,6 +31,8 @@ public class ItemHolder : Editor
         charProp = serializedObject.FindProperty("char_prop");
         GOProp = serializedObject.FindProperty("GO_prop");
         SprProp = serializedObject.FindProperty("sprite_prop");
+
+        conditionalslots = serializedObject.FindProperty("ConditionalSlots");
 
     }
 
@@ -38,6 +42,8 @@ public class ItemHolder : Editor
         EditorGUILayout.PropertyField(itemTypeProp);
 
         EditorGUILayout.PropertyField(itemVariableTypeProp);
+
+        EditorList.Show(serializedObject.FindProperty("ConditionalSlots"), EditorListOption.ListLabel | EditorListOption.Buttons);
 
         VariableType.Type type = (VariableType.Type)itemVariableTypeProp.enumValueIndex;
 

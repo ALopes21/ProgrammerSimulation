@@ -14,8 +14,12 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public enum ItemType
     {
         Basic,
-        Option
+        Option,
+        Condition,
+        Loop
     }
+
+    public List<GameObject> ConditionalSlots = new List<GameObject>();
 
     //Current value
     public float float_prop;
@@ -53,11 +57,27 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         gameObject.GetComponent<Button>().interactable = false;
         valueHandler = GameObject.Find("Main Camera").GetComponent<VariableValueHandler>();
-        dropdown = gameObject.transform.GetChild(1).gameObject.GetComponent<Dropdown>();
-        dropdown.gameObject.SetActive(false);
-        if(itemType == ItemType.Basic)
+        if(itemType != ItemType.Condition)
+        {
+            dropdown = gameObject.transform.GetChild(1).gameObject.GetComponent<Dropdown>();
+            dropdown.gameObject.SetActive(false);
+        }
+        if(itemType != ItemType.Option)
         {
             gameObject.GetComponent<Button>().interactable = false;
+        }
+        if(itemType == ItemType.Condition)
+        {
+            Transform panel = transform.GetChild(1);
+            foreach(Transform child in panel)
+            {
+                if (child.gameObject.tag == "ConditionalSlot")
+                {
+                    if(!ConditionalSlots.Contains(child.gameObject))
+                    { ConditionalSlots.Add(child.gameObject); }
+
+                }
+            }
         }
         SetUpStartProp();
     }
@@ -243,7 +263,18 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                     break;
             }
             StartCoroutine(DisableDropdown(0.2f, false));
-            valueHandler.SetPredefinedValues(this);
+
+            valueHandler.SetItemValues(this, transform.parent.GetComponent<VariableSlot>());
+
+            //if (this.GetComponentInParent<VariableSlot>().thisSlotType == VariableSlot.SlotType.Conditional)
+            //{
+            //    valueHandler.SetConditionValues(this, this.transform.parent.GetComponent<VariableSlot>());
+            //}
+            //else
+            //{
+            //    valueHandler.SetPredefinedValues(this, this.transform.parent.GetComponent<VariableSlot>());
+            //}
+
         }
         else
         {

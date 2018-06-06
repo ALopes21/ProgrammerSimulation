@@ -9,14 +9,27 @@ using System.Collections;
 [RequireComponent(typeof(Image))]
 public class VariableSlot : MonoBehaviour, IDropHandler
 {
+
     public enum SlotType
     {
         Basic,
-        Option //if Option type then check all slots are filled before dothething();
+        Conditional,
     }
 
+    public enum ConditionType
+    {
+        If,
+        This,
+        Then,
+        That
+    }
+
+    public SlotType thisSlotType = SlotType.Basic;
+    public ConditionType thisConditionType = ConditionType.If;
     public VariableType.Type slotVariableType = VariableType.Type.Float;
     public bool isTaken;
+    public DragAndDropItem parentItem;
+
     VariableValueHandler valueHandler;
 
     public struct DropDescriptor                                            // Struct with info about item's drop event
@@ -128,7 +141,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
                 GetComponent<Image>().color = Color.yellow;
                 break;
             case VariableType.Type.None:
-                GetComponent<Image>().color = Color.grey;
+                GetComponent<Image>().color = Color.grey; //Use for all Inventory Slots!
                 break;
             case VariableType.Type.Any:
                 GetComponent<Image>().color = Color.white;

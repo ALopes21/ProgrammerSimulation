@@ -17,7 +17,6 @@ public class SceneHandler : MonoBehaviour
     public GameObject ErrorPanel;
     public bool gameOver;
 
-    // Use this for initialization
     void Start()
     {
         ErrorPanel = GameObject.Find("ErrorPanel");
@@ -45,7 +44,6 @@ public class SceneHandler : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(!gameOver)
