@@ -17,18 +17,16 @@ public class VariableValueHandler : MonoBehaviour
         ObjInt = GameObject.Find("Main Camera").GetComponent<ObjectSelection>();
     }
 
-    public void CheckItemVariableType(DragAndDropItem item, VariableSlot slot)
+    public void CheckSlotVariableType(DragAndDropItem item, VariableSlot slot)
     {
         VariableSlot sourceCell = DragAndDropItem.sourceCell;
-        //only for basic items
-        if (slot.slotVariableType == item.itemVariableType && item.itemType != DragAndDropItem.ItemType.Condition)
+        //if dropped in the object slot of with the same variableType or Any
+        if (slot.slotVariableType == item.itemVariableType || slot.slotVariableType == VariableType.Type.Any)
         {
-                slot.SetItem(item, sourceCell);
-                CheckItemType(item, slot);
-        }
-        //if dropped in slot that takes any item type && used for condition items
-        else if(slot.slotVariableType == VariableType.Type.Any)
-        {
+            if(sourceCell.thisSlotType == VariableSlot.SlotType.Conditional)
+            {
+                CheckIFConditionalBackPeddle(item, sourceCell);
+            }
             slot.SetItem(item, sourceCell);
             CheckItemType(item, slot);
         }
@@ -36,36 +34,29 @@ public class VariableValueHandler : MonoBehaviour
         else if(slot.slotVariableType == VariableType.Type.None)
         {
             item.gameObject.GetComponent<Button>().interactable = false;
-            //if moving withing inventory
-            if(sourceCell.slotVariableType == VariableType.Type.None)
-            {
-                Debug.Log("Moved within Inventory");
-                slot.SetItem(item, sourceCell);
-            }
-            //if moving back to inventory from a conditional or condition slot
-            else if (sourceCell.thisSlotType == VariableSlot.SlotType.Conditional)
-            {
-                Debug.Log("Move Item Back to Inventory");
-                slot.SetItem(item, sourceCell);
 
-                //If item is a Conditional Item and has all its Conditional slots Taken then BackPeddle
-                if (item.itemType == DragAndDropItem.ItemType.Condition)
-                {
+            switch(sourceCell.slotVariableType)
+            {
+                case VariableType.Type.None:
+                    Debug.Log("Moved within Inventory");
+                    slot.SetItem(item, sourceCell);
+                    break;
+                case VariableType.Type.Condition:
+                    Debug.Log("Move Item Back to Inventory Form Condition Slot");
+                    slot.SetItem(item, sourceCell);
                     GameObject conditionPanel = item.gameObject.transform.GetChild(1).gameObject;
                     conditionPanel.SetActive(false);
+                    //if the items conditional slots have items in them, put them back in the inventory
                     foreach (GameObject g in item.ConditionalSlots)
                     {
-                        //if the conditional slots have items in them...
                         if (g.transform.childCount > 0)
                         {
                             GameObject thisItem = g.transform.GetChild(0).gameObject;
-                            GameObject[] slots = GameObject.FindGameObjectsWithTag("Slot");
-                            for (int s = 0; s < slots.Length; s++)
+                            for (int s = 0; s < sceneHandler.InvSlots.Length; s++)
                             {
-                                if (slots[s].GetComponent<VariableSlot>().isTaken == false)
+                                if (sceneHandler.InvSlots[s].GetComponent<VariableSlot>().isTaken == false)
                                 {
-                                    //put the items back in the inventory panel.
-                                    slots[s].GetComponent<VariableSlot>().PlaceItem(thisItem);
+                                    sceneHandler.InvSlots[s].GetComponent<VariableSlot>().PlaceItem(thisItem);
                                     Destroy(thisItem);
                                     break;
 
@@ -73,40 +64,30 @@ public class VariableValueHandler : MonoBehaviour
                             }
                         }
                     }
+                    //if all conditional slots are taken then backpeddle
                     if (AllConditionalSlotsTaken(item.ConditionalSlots) == true)
                     {
                         Debug.Log("Conditional Backpeddle");
                         handler = ObjInt.activePanel.GetComponent<CodeHandler>();
                         handler.ConditionalBackPeddle(item);
                     }
-                }
-                //if item is basic and moving out of a conditional slot...
-                else if(item.itemType != DragAndDropItem.ItemType.Condition)
-                {
-                    int takenCount = 0;
-                    foreach (GameObject g in sourceCell.parentItem.ConditionalSlots)
+                    break;
+                default:
+                    switch(sourceCell.thisSlotType)
                     {
-                        if (g.GetComponent<VariableSlot>().isTaken == true)
-                        {
-                            takenCount++;
-                        }
+                        case VariableSlot.SlotType.Basic:
+                            Debug.Log("Basic Backpeddle");
+                            slot.SetItem(item, sourceCell);
+                            handler = ObjInt.activePanel.GetComponent<CodeHandler>();
+                            handler.BackPeddle(item);
+                            StartCoroutine(item.DisableDropdown(0.2f, true));
+                            break;
+                        case VariableSlot.SlotType.Conditional:
+                            //if item is basic and moving out of a conditional slot...
+                            CheckIFConditionalBackPeddle(item, sourceCell);
+                            break;
                     }
-                    if(takenCount >= 3)
-                    {
-                        Debug.Log("Conditional Backpeddle");
-                        handler = ObjInt.activePanel.GetComponent<CodeHandler>();
-                        handler.ConditionalBackPeddle(item);
-                    }
-                }
-            }
-            // if no conditions involved - do basic backpeddle
-            else if (sourceCell.thisSlotType != VariableSlot.SlotType.Conditional)
-            {
-                Debug.Log("Basic Backpeddle");
-                slot.SetItem(item, sourceCell);
-                handler = ObjInt.activePanel.GetComponent<CodeHandler>();
-                handler.BackPeddle(item);
-                StartCoroutine(item.DisableDropdown(0.2f, true));
+                    break;
             }
         }
         //if dropped in wrong slot
@@ -128,22 +109,6 @@ public class VariableValueHandler : MonoBehaviour
                 item.gameObject.GetComponent<Button>().interactable = true;
                 SetupDropDown(item);
                 break;
-            case DragAndDropItem.ItemType.Condition:
-                GameObject conditionPanel = item.gameObject.transform.GetChild(1).gameObject;
-                conditionPanel.SetActive(true);
-                foreach(Transform child in conditionPanel.transform)
-                {
-                    if(child.gameObject.tag == "ConditionalSlot")
-                    {
-                        child.gameObject.GetComponent<VariableSlot>().parentItem = item;
-                    }
-                }
-                break;
-            case DragAndDropItem.ItemType.Loop:
-                item.gameObject.transform.GetChild(1).gameObject.SetActive(true);
-                //wait for children items to be filled
-                //set Loop values
-                break;
             default:
                 break;
         }
@@ -159,12 +124,13 @@ public class VariableValueHandler : MonoBehaviour
                 handler.charValue = item.char_prop;
                 SetupItemImage(item, Color.blue, item.float_prop.ToString());
                 handler.functionString = "DoTheMoveThing";
+                CallCodeHandler(slot);
                 break;
             case VariableType.Type.Char:
                 handler.charValue = item.char_prop;
                 SetupItemImage(item, Color.red, item.char_prop.ToString());
                 //handler.functionString = "DoTheMoveThing";
-                //handler.DoTheMoveThing();
+                //CallCodeHandler(slot);
                 break;
             case VariableType.Type.Bool:
                 Class.SetValues(slot, item.bool_prop);
@@ -177,31 +143,38 @@ public class VariableValueHandler : MonoBehaviour
                     SetupItemImage(item, Color.red, "F");
                 }
                 handler.functionString = "DoTheColliderThing";
+                CallCodeHandler(slot);
                 break;
             case VariableType.Type.GameObject:
                 Class.SetValues(slot, item.GO_prop);
                 SetupItemImage(item, Color.white, item.GO_prop.name);
                 handler.functionString = "DoTheObjectThing";
+                CallCodeHandler(slot);
                 break;
             case VariableType.Type.Sprite:
                 Class.SetValues(slot, item.sprite_prop);
                 SetupItemImage(item, Color.white, item.sprite_prop.name);
                 handler.functionString = "DoTheObjectThing";
+                CallCodeHandler(slot);
+                break;
+            case VariableType.Type.Condition:
+                GameObject conditionPanel = item.gameObject.transform.GetChild(1).gameObject;
+                conditionPanel.SetActive(true);
+                foreach (Transform child in conditionPanel.transform)
+                {
+                    if (child.gameObject.tag == "ConditionalSlot")
+                    {
+                        child.gameObject.GetComponent<VariableSlot>().parentItem = item;
+                    }
+                }
+                break;
+            case VariableType.Type.Loop:
+                item.gameObject.transform.GetChild(1).gameObject.SetActive(true);
+                //wait for children items to be filled
+                //set Loop values
                 break;
             default:
                 Debug.Log("An error occurred");
-                break;
-        }
-        switch (slot.thisSlotType)
-        {
-            case VariableSlot.SlotType.Basic:
-                handler.Invoke(handler.functionString, 0);
-                break;
-            case VariableSlot.SlotType.Conditional:
-                if (AllConditionalSlotsTaken(slot.parentItem.ConditionalSlots) == true)
-                {
-                    handler.DoTheConditionThing();
-                }
                 break;
         }
     }
@@ -297,6 +270,9 @@ public class VariableValueHandler : MonoBehaviour
         }
     }
 
+
+
+    //Repeated Checks//
     public bool AllConditionalSlotsTaken(List<GameObject> slots)
     {
         foreach(GameObject g in slots)
@@ -305,5 +281,39 @@ public class VariableValueHandler : MonoBehaviour
             { return false; }
         }
         return true;
+    }
+
+    public void CheckIFConditionalBackPeddle(DragAndDropItem item, VariableSlot source)
+    {
+        int takenCount = 0;
+        foreach (GameObject g in source.parentItem.ConditionalSlots)
+        {
+            if (g.GetComponent<VariableSlot>().isTaken == true)
+            {
+                takenCount++;
+            }
+        }
+        if (takenCount >= 2)
+        {
+            Debug.Log("Run Conditional Backpeddle");
+            handler = ObjInt.activePanel.GetComponent<CodeHandler>();
+            handler.ConditionalBackPeddle(item);
+        }
+    }
+
+    public void CallCodeHandler(VariableSlot slot)
+    {
+        switch (slot.thisSlotType)
+        {
+            case VariableSlot.SlotType.Basic:
+                handler.Invoke(handler.functionString, 0);
+                break;
+            case VariableSlot.SlotType.Conditional:
+                if (AllConditionalSlotsTaken(slot.parentItem.ConditionalSlots) == true)
+                {
+                    handler.DoTheConditionThing();
+                }
+                break;
+        }
     }
 }

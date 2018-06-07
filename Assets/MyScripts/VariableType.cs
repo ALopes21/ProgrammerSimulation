@@ -12,7 +12,9 @@ public class VariableType : MonoBehaviour {
         GameObject,
         Sprite,
         Any,
-        None
+        None,
+        Condition,
+        Loop
     }
 
     public Type type = Type.Float;

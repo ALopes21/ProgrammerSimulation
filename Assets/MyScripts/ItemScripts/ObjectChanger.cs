@@ -10,6 +10,7 @@ public class ObjectChanger : MonoBehaviour {
     public GameObject newObject, originalObject;
 
     public GameObject Cousin;
+    public object OriginalAction;
 
     public enum Conditions
     {

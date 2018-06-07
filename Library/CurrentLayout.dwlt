@@ -324,8 +324,8 @@ MonoBehaviour:
   m_ZoomArea:
     m_HRangeLocked: 0
     m_VRangeLocked: 0
-    m_HBaseRangeMin: -428
-    m_HBaseRangeMax: 428
+    m_HBaseRangeMin: -316.44446
+    m_HBaseRangeMax: 316.44446
     m_VBaseRangeMin: -178
     m_VBaseRangeMax: 178
     m_HAllowExceedBaseRangeMin: 1
@@ -395,18 +395,18 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 6278feff6e78feff8e78feffa278feffecf9ffff5afaffff68faffffeafafffff4faffff76fbfffff0fbffff00000000e65a0000465b00006c5b0000c45b0000d05b0000085c0000465c0000805c0000
+    m_ExpandedIDs: 5afafffff0fbffff00000000e45a0000445b0000a85b0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: Orange_Box128x128Measured (2)
-      m_OriginalName: Orange_Box128x128Measured (2)
+      m_Name: Cell (3)
+      m_OriginalName: Cell (3)
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 23396
+      m_UserData: 23622
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
       m_OriginalEventType: 0
@@ -445,14 +445,14 @@ MonoBehaviour:
     height: 373
   m_PersistentViewDataDictionary: {fileID: 0}
   m_SceneLighting: 1
-  lastFramingTime: 9190.124890507062
+  lastFramingTime: 6580.758823070353
   m_2DMode: 1
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 442.00684, y: 217.09718, z: -2.0118136}
+    m_Target: {x: 691.862, y: 114.928986, z: 0}
     speed: 2
-    m_Value: {x: 442.00684, y: 217.09718, z: -2.0118136}
+    m_Value: {x: 691.862, y: 114.928986, z: 0}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -484,9 +484,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 625.87836
+    m_Target: 299.61533
     speed: 2
-    m_Value: 625.87836
+    m_Value: 299.61533
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -560,20 +560,20 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/MyScripts/Handlers
+    - Assets/MyScripts
   m_ViewMode: 1
   m_StartGridSize: 48
   m_LastFolders:
-  - Assets/MyScripts/Handlers
+  - Assets/MyScripts
   m_LastFoldersGridSize: 48
   m_LastProjectPath: C:\Users\lopa421\Documents\GitHub\ProgrammerSimulation
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: ca320000
-    m_LastClickedID: 13002
-    m_ExpandedIDs: 00000000b4290000222a0000302f0000b8340000983c0000e8490000524a0000d6530000805400009457000000ca9a3bffffff7f
+    m_SelectedIDs: 322f0000
+    m_LastClickedID: 12082
+    m_ExpandedIDs: 00000000b6290000242a0000322f0000ba3400009a3c0000ea490000544a0000d8530000825400009657000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -601,7 +601,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000b4290000222a0000b8340000983c0000e8490000524a0000d65300008054000094570000
+    m_ExpandedIDs: 00000000b6290000242a0000322f0000ba3400009a3c0000ea490000544a0000d85300008254000096570000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -626,9 +626,9 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 
-    m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 0
+    m_SelectedInstanceIDs: 765b0000
+    m_LastClickedInstanceID: 23414
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000ae250000584100000626000086b0feff242500006e250000d02500008425000098250000642500004c250000208cfdffa64e01003c710100eeedfaff2a310000fa54ffffda9fffff9cdbfdffacae000090e1feffc696000080a6000024ac000062b200002cca0100b62b000090b00000ac2a0000c2ad00000000000020a3000054a30000d8a0000078340000523100003a500000e4460000
     m_RenameOverlay:
       m_UserAcceptedRename: 0

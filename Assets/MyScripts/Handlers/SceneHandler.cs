@@ -17,6 +17,9 @@ public class SceneHandler : MonoBehaviour
     public GameObject ErrorPanel;
     public bool gameOver;
 
+    public GameObject[] InvSlots;
+    public GameObject[] Items;
+
     void Start()
     {
         ErrorPanel = GameObject.Find("ErrorPanel");
@@ -30,6 +33,9 @@ public class SceneHandler : MonoBehaviour
 
         Stars = GameObject.FindGameObjectsWithTag("InGameStars");
         Lives = GameObject.FindGameObjectsWithTag("InGameLives");
+
+        InvSlots = GameObject.FindGameObjectsWithTag("Slot");
+        Items = GameObject.FindGameObjectsWithTag("Item");
 
         StarNumber = 3;
         lives = 3;

@@ -25,15 +25,12 @@ namespace UnityStandardAssets.Utility
         public int triggerCount = 1;
         public bool repeatTrigger = false;
 
-        //Added
-        public GameObject[] slots;
-        public GameObject[] items;
+
         public SceneHandler handler;
 
 
         private void Start()
         {
-            items = GameObject.FindGameObjectsWithTag("Item");
             handler = GameObject.Find("Main Camera").GetComponent<SceneHandler>();
         }
 
@@ -107,15 +104,14 @@ namespace UnityStandardAssets.Utility
                         }
                         break;
                     case Mode.GetVariables:
-                        slots = GameObject.FindGameObjectsWithTag("Slot");
-                        for (int i = 0; i < items.Length; i++)
+                        for (int i = 0; i < handler.Items.Length; i++)
                             {
-                                for(int j = 0; j < slots.Length; j++)
+                                for(int j = 0; j < handler.InvSlots.Length; j++)
                                 {
-                                    if(slots[j].GetComponent<VariableSlot>().isTaken == false)
+                                    if (handler.InvSlots[j].GetComponent<VariableSlot>().isTaken == false)
                                     {
-                                        slots[j].GetComponent<VariableSlot>().PlaceItem(items[i]);
-                                        Destroy(items[i]);
+                                        handler.InvSlots[j].GetComponent<VariableSlot>().PlaceItem(handler.Items[i]);
+                                        Destroy(handler.Items[i]);
                                         break;
                                         
                                     }

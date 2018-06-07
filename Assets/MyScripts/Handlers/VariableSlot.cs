@@ -109,7 +109,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
                 if ((item != null) && (sourceCell != this) && (isTaken == false))
                 {
                     Debug.Log("Passed all checks...");
-                    valueHandler.CheckItemVariableType(item, this);   
+                    valueHandler.CheckSlotVariableType(item, this);   
                 }
                 if (item.GetComponentInParent<VariableSlot>() == null)   // If item have no cell after drop
                 {

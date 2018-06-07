@@ -14,9 +14,7 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public enum ItemType
     {
         Basic,
-        Option,
-        Condition,
-        Loop
+        Option
     }
 
     public List<GameObject> ConditionalSlots = new List<GameObject>();
@@ -57,7 +55,8 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         gameObject.GetComponent<Button>().interactable = false;
         valueHandler = GameObject.Find("Main Camera").GetComponent<VariableValueHandler>();
-        if(itemType != ItemType.Condition)
+
+        if(itemVariableType != VariableType.Type.Condition && itemVariableType != VariableType.Type.Loop)
         {
             dropdown = gameObject.transform.GetChild(1).gameObject.GetComponent<Dropdown>();
             dropdown.gameObject.SetActive(false);
@@ -66,7 +65,7 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         {
             gameObject.GetComponent<Button>().interactable = false;
         }
-        if(itemType == ItemType.Condition)
+        if(itemVariableType == VariableType.Type.Condition)
         {
             Transform panel = transform.GetChild(1);
             foreach(Transform child in panel)

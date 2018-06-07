@@ -11,13 +11,13 @@ public class GenericClass
     {
         switch (slot.thisConditionType)
         {
-            case VariableSlot.ConditionType.That:
+            case VariableSlot.ConditionType.This:
                 condition = value;
                 break;
             case VariableSlot.ConditionType.Then:
                 thenobj = value;
                 break;
-            case VariableSlot.ConditionType.This:
+            case VariableSlot.ConditionType.That:
                 action = value;
                 break;
         }
