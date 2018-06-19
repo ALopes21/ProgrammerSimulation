@@ -6,16 +6,15 @@ public class VariableType : MonoBehaviour {
 
     public enum Type
     {
-        Float,
-        Char,
+        Vector2,
         Bool,
         GameObject,
         Sprite,
         Any,
         None,
-        Condition,
-        Loop
+        Layered,
+        Int
     }
 
-    public Type type = Type.Float;
+    public Type type = Type.Vector2;
 }

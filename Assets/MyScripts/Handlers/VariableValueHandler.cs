@@ -41,13 +41,13 @@ public class VariableValueHandler : MonoBehaviour
                     Debug.Log("Moved within Inventory");
                     slot.SetItem(item, sourceCell);
                     break;
-                case VariableType.Type.Condition:
-                    Debug.Log("Move Item Back to Inventory Form Condition Slot");
+                case VariableType.Type.Layered:
+                    Debug.Log("Move Item Back to Inventory From Condition Slot");
                     slot.SetItem(item, sourceCell);
-                    GameObject conditionPanel = item.gameObject.transform.GetChild(1).gameObject;
-                    conditionPanel.SetActive(false);
+                    GameObject LayeredPanel = item.gameObject.transform.GetChild(1).gameObject;
+                    LayeredPanel.SetActive(false);
                     //if the items conditional slots have items in them, put them back in the inventory
-                    foreach (GameObject g in item.ConditionalSlots)
+                    foreach (GameObject g in item.LayeredSlots)
                     {
                         if (g.transform.childCount > 0)
                         {
@@ -65,7 +65,7 @@ public class VariableValueHandler : MonoBehaviour
                         }
                     }
                     //if all conditional slots are taken then backpeddle
-                    if (AllConditionalSlotsTaken(item.ConditionalSlots) == true)
+                    if (AllLayeredSlotsTaken(item.LayeredSlots) == true)
                     {
                         Debug.Log("Conditional Backpeddle");
                         handler = ObjInt.activePanel.GetComponent<CodeHandler>();
@@ -83,6 +83,12 @@ public class VariableValueHandler : MonoBehaviour
                             StartCoroutine(item.DisableDropdown(0.2f, true));
                             break;
                         case VariableSlot.SlotType.Conditional:
+                            slot.SetItem(item, sourceCell);
+                            //if item is basic and moving out of a conditional slot...
+                            CheckIFConditionalBackPeddle(item, sourceCell);
+                            break;
+                        case VariableSlot.SlotType.Looper:
+                            slot.SetItem(item, sourceCell);
                             //if item is basic and moving out of a conditional slot...
                             CheckIFConditionalBackPeddle(item, sourceCell);
                             break;
@@ -119,18 +125,12 @@ public class VariableValueHandler : MonoBehaviour
         handler = ObjInt.activePanel.GetComponent<CodeHandler>();
         switch (item.itemVariableType)
         {
-            case VariableType.Type.Float:
-                Class.SetValues(slot, item.float_prop);
-                handler.charValue = item.char_prop;
-                SetupItemImage(item, Color.blue, item.float_prop.ToString());
+            case VariableType.Type.Vector2:
+                Vector2 newPosition = GetVector2(item.vector2_prop);
+                Class.SetValues(slot, newPosition);
+                SetupItemImage(item, Color.blue, item.vector2_prop);
                 handler.functionString = "DoTheMoveThing";
                 CallCodeHandler(slot);
-                break;
-            case VariableType.Type.Char:
-                handler.charValue = item.char_prop;
-                SetupItemImage(item, Color.red, item.char_prop.ToString());
-                //handler.functionString = "DoTheMoveThing";
-                //CallCodeHandler(slot);
                 break;
             case VariableType.Type.Bool:
                 Class.SetValues(slot, item.bool_prop);
@@ -154,24 +154,32 @@ public class VariableValueHandler : MonoBehaviour
             case VariableType.Type.Sprite:
                 Class.SetValues(slot, item.sprite_prop);
                 SetupItemImage(item, Color.white, item.sprite_prop.name);
-                handler.functionString = "DoTheObjectThing";
+                handler.functionString = "DoTheSpriteThing";
                 CallCodeHandler(slot);
                 break;
-            case VariableType.Type.Condition:
-                GameObject conditionPanel = item.gameObject.transform.GetChild(1).gameObject;
-                conditionPanel.SetActive(true);
-                foreach (Transform child in conditionPanel.transform)
+            case VariableType.Type.Layered:
+                GameObject LayeredPanel = item.gameObject.transform.GetChild(1).gameObject;
+                LayeredPanel.SetActive(true);
+                foreach (Transform child in LayeredPanel.transform)
                 {
-                    if (child.gameObject.tag == "ConditionalSlot")
+                    if (child.gameObject.tag == "LayeredSlots")
                     {
                         child.gameObject.GetComponent<VariableSlot>().parentItem = item;
                     }
                 }
                 break;
-            case VariableType.Type.Loop:
-                item.gameObject.transform.GetChild(1).gameObject.SetActive(true);
-                //wait for children items to be filled
-                //set Loop values
+            case VariableType.Type.Int:
+                Class.SetValues(slot, item.int_prop);
+                SetupItemImage(item, Color.red, item.int_prop.ToString());
+                if(slot.thisSlotType == VariableSlot.SlotType.Looper)
+                {
+                    CallCodeHandler(slot);
+                }
+                else
+                {
+                    handler.functionString = "DoTheIntThing";
+                    CallCodeHandler(slot);
+                }
                 break;
             default:
                 Debug.Log("An error occurred");
@@ -185,16 +193,10 @@ public class VariableValueHandler : MonoBehaviour
         values.Add("");
         switch (item.itemVariableType)
         {
-            case VariableType.Type.Float:
-                foreach (float f in item.floatList_prop)
+            case VariableType.Type.Vector2:
+                foreach (string s in item.vector2List_Prop)
                 {
-                    values.Add(f.ToString());
-                }
-                break;
-            case VariableType.Type.Char:
-                foreach (char c in item.charList_prop)
-                {
-                    values.Add(c.ToString());
+                    values.Add(s);
                 }
                 break;
             case VariableType.Type.Bool:
@@ -239,11 +241,7 @@ public class VariableValueHandler : MonoBehaviour
     {
         switch (item.itemVariableType)
         {
-            case VariableType.Type.Float:
-                item.gameObject.GetComponent<Image>().color = color; //gameObject.GetComponent<Image>().sprite = FloatSprite;
-                item.gameObject.GetComponentInChildren<Text>().text = display;
-                break;
-            case VariableType.Type.Char:
+            case VariableType.Type.Vector2:
                 item.gameObject.GetComponent<Image>().color = color; //gameObject.GetComponent<Image>().sprite = FloatSprite;
                 item.gameObject.GetComponentInChildren<Text>().text = display;
                 break;
@@ -261,6 +259,10 @@ public class VariableValueHandler : MonoBehaviour
                 item.gameObject.GetComponent<Image>().sprite = (Sprite)Resources.Load("ItemSprites/" + display, typeof(Sprite));
                 item.gameObject.GetComponentInChildren<Text>().text = "";
                 break;
+            case VariableType.Type.Int:
+                item.gameObject.GetComponent<Image>().color = color;
+                item.gameObject.GetComponentInChildren<Text>().text = display;
+                break;
             case VariableType.Type.Any:
                 item.gameObject.GetComponent<Image>().color = color; //gameObject.GetComponent<Image>().sprite = AnySprite;
                 item.gameObject.GetComponentInChildren<Text>().text = display;
@@ -273,12 +275,13 @@ public class VariableValueHandler : MonoBehaviour
 
 
     //Repeated Checks//
-    public bool AllConditionalSlotsTaken(List<GameObject> slots)
+    public bool AllLayeredSlotsTaken(List<GameObject> slots)
     {
         foreach(GameObject g in slots)
         {
             if (g.GetComponent<VariableSlot>().isTaken == false)
-            { return false; }
+            {
+                return false; }
         }
         return true;
     }
@@ -286,7 +289,7 @@ public class VariableValueHandler : MonoBehaviour
     public void CheckIFConditionalBackPeddle(DragAndDropItem item, VariableSlot source)
     {
         int takenCount = 0;
-        foreach (GameObject g in source.parentItem.ConditionalSlots)
+        foreach (GameObject g in source.parentItem.LayeredSlots)
         {
             if (g.GetComponent<VariableSlot>().isTaken == true)
             {
@@ -309,11 +312,26 @@ public class VariableValueHandler : MonoBehaviour
                 handler.Invoke(handler.functionString, 0);
                 break;
             case VariableSlot.SlotType.Conditional:
-                if (AllConditionalSlotsTaken(slot.parentItem.ConditionalSlots) == true)
+                if (AllLayeredSlotsTaken(slot.parentItem.LayeredSlots) == true)
                 {
                     handler.DoTheConditionThing();
                 }
                 break;
+            case VariableSlot.SlotType.Looper:
+                if(AllLayeredSlotsTaken(slot.parentItem.LayeredSlots) == true)
+                {
+                    handler.DoTheLoopThing();
+                }
+                break;
         }
+    }
+
+    public Vector2 GetVector2(string position)
+    {
+        string[] temp = position.Split(',');
+        float x = System.Convert.ToSingle(temp[0]);
+        float y = System.Convert.ToSingle(temp[1]);
+        Vector2 rValue = new Vector2(x, y);
+        return rValue;
     }
 }

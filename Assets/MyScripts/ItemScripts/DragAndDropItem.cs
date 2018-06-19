@@ -17,27 +17,28 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         Option
     }
 
-    public List<GameObject> ConditionalSlots = new List<GameObject>();
+    public List<GameObject> LayeredSlots = new List<GameObject>();
 
     //Current value
-    public float float_prop;
+    public string vector2_prop;
     public char char_prop;
     public bool bool_prop;
     public GameObject GO_prop;
     public GameObject sprite_prop;
+    public int int_prop;
 
     //List of possible values loaded into the dropdowns
-    public float[] floatList_prop;
-    public char[] charList_prop;
+    public string[] vector2List_Prop;
     public List<bool> boolList_prop = new List<bool>();
     public GameObject[] gameObjectList_prop;
     public GameObject[] spriteList_prop;
+    public int[] intList_prop;
 
     //Original Sprites, Colors and Text of the item
     public Color originalColor; //public Sprite OriginalSprite;
     public string originalString = "";
 
-    public VariableType.Type itemVariableType = VariableType.Type.Float;
+    public VariableType.Type itemVariableType = VariableType.Type.Vector2;
     public ItemType itemType = ItemType.Basic;
 
     static public DragAndDropItem draggedItem;                                      // Item that is dragged now
@@ -56,7 +57,7 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         gameObject.GetComponent<Button>().interactable = false;
         valueHandler = GameObject.Find("Main Camera").GetComponent<VariableValueHandler>();
 
-        if(itemVariableType != VariableType.Type.Condition && itemVariableType != VariableType.Type.Loop)
+        if(itemVariableType != VariableType.Type.Layered)// && itemVariableType != VariableType.Type.Loop)
         {
             dropdown = gameObject.transform.GetChild(1).gameObject.GetComponent<Dropdown>();
             dropdown.gameObject.SetActive(false);
@@ -65,15 +66,15 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         {
             gameObject.GetComponent<Button>().interactable = false;
         }
-        if(itemVariableType == VariableType.Type.Condition)
+        if(itemVariableType == VariableType.Type.Layered)
         {
             Transform panel = transform.GetChild(1);
             foreach(Transform child in panel)
             {
-                if (child.gameObject.tag == "ConditionalSlot")
+                if (child.gameObject.tag == "LayeredSlots")
                 {
-                    if(!ConditionalSlots.Contains(child.gameObject))
-                    { ConditionalSlots.Add(child.gameObject); }
+                    if(!LayeredSlots.Contains(child.gameObject))
+                    { LayeredSlots.Add(child.gameObject); }
 
                 }
             }
@@ -86,20 +87,12 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         //Change from Color to Sprite
         switch (itemVariableType)
         {
-            case VariableType.Type.Float:
+            case VariableType.Type.Vector2:
                 originalColor = Color.blue;
-                originalString = "F";
+                originalString = "V2";
                 if(itemType == ItemType.Basic)
                 {
-                    originalString = float_prop.ToString();
-                }
-                break;
-            case VariableType.Type.Char:
-                originalColor = Color.red;
-                originalString = "C";
-                if (itemType == ItemType.Basic)
-                {
-                    originalString = char_prop.ToString();
+                    originalString = vector2_prop;
                 }
                 break;
             case VariableType.Type.Bool:
@@ -124,7 +117,7 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 originalString = "Obj";
                 if (itemType == ItemType.Basic)
                 {
-                    originalColor = Color.white;
+                    //originalColor = Color.white;
                     originalString = GO_prop.name;
                 }
                 break;
@@ -133,8 +126,16 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 originalString = "Obj";
                 if (itemType == ItemType.Basic)
                 {
-                    originalColor = Color.white;
+                    //originalColor = Color.white;
                     originalString = sprite_prop.name;
+                }
+                break;
+            case VariableType.Type.Int:
+                originalColor = Color.red;
+                originalString = "Int";
+                if (itemType == ItemType.Basic)
+                {
+                    originalString = int_prop.ToString();
                 }
                 break;
             case VariableType.Type.Any:
@@ -234,16 +235,15 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void GetDropdownValue()
     {
+        codeHandler = GameObject.Find("Main Camera").GetComponent<ObjectSelection>().activePanel.GetComponent<CodeHandler>();
+        codeHandler.BackPeddle(this);
         int value = dropdown.GetComponent<Dropdown>().value - 1;
         if(value >= 0)
         {
             switch (itemVariableType)
             {
-                case VariableType.Type.Float:
-                    float_prop = floatList_prop[value];
-                    break;
-                case VariableType.Type.Char:
-                    char_prop = charList_prop[value];
+                case VariableType.Type.Vector2:
+                    vector2_prop = vector2List_Prop[value];
                     break;
                 case VariableType.Type.Bool:
                     bool_prop = boolList_prop[value];
@@ -253,6 +253,9 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                     break;
                 case VariableType.Type.Sprite:
                     sprite_prop = spriteList_prop[value];
+                    break;
+                case VariableType.Type.Int:
+                    int_prop = intList_prop[value];
                     break;
                 case VariableType.Type.Any:
                     //leave this for now > Set type and value
@@ -277,7 +280,6 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
         else
         {
-            codeHandler = GameObject.Find("Main Camera").GetComponent<ObjectSelection>().activePanel.GetComponent<CodeHandler>();
             codeHandler.BackPeddle(this);
             valueHandler.SetupItemImage(this, originalColor, originalString);
             StartCoroutine(DisableDropdown(0.2f, true));

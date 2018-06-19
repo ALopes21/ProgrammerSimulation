@@ -5,7 +5,7 @@ using UnityEngine;
 public class MovableObject : MonoBehaviour {
 
     public Vector2 newPos;
-    public bool moving;
+    public bool moving, looping, looped;
     public Vector2 previousPos;
     ObjectSelection ObjInt;
     public CodeHandler handler;
@@ -15,6 +15,9 @@ public class MovableObject : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
+        looping = false;
+        looped = false;
+        previousPos = gameObject.transform.position;
         ObjInt = GameObject.Find("Main Camera").GetComponent<ObjectSelection>();
         detectionCols = gameObject.GetComponentsInChildren<Collider2D>();
         foreach(Collider2D col in detectionCols)
@@ -40,77 +43,75 @@ public class MovableObject : MonoBehaviour {
                 if (transform.position.x == newPos.x && transform.position.y == newPos.y)
                 {
                     moving = false;
+                    if (looped) { if (--GenericClass.loopCount > 0) { handler.DoTheLoopThing(); } looped = false; return; }
+                    if (looping == true){ Invoke("MoveBack",1); looping = false; looped = true; }
                 }
             }
         }
     }
 
-    public void MoveObject(float variable, char axis)
+    public void MoveObject(Vector2 variable)
     {
         handler = ObjInt.activePanel.GetComponent<CodeHandler>();
         previousPos = gameObject.transform.position;
         newPos = gameObject.transform.position;
 
-        switch (axis)
+        if(variable.x > 0)
         {
-            case 'x':
-                newPos.x += variable;
-                moving = true;
-                if(variable > 0)
+            newPos.x += variable.x;
+            moving = true;
+            foreach (Collider2D col in detectionCols)
+            {
+                if (col.gameObject.name == "rightCol")
                 {
-                    foreach (Collider2D col in detectionCols)
-                    {
-                        if(col.gameObject.name == "rightCol")
-                        {
-                            col.enabled = true;
-                        }
-                    }
+                    col.enabled = true;
                 }
-                if(variable < 0)
-                {
-                    foreach (Collider2D col in detectionCols)
-                    {
-                        if (col.gameObject.name == "leftCol")
-                        {
-                            col.enabled = true;
-                        }
-                    }
-                }
-                break;
-            case 'y':
-                newPos.y += variable;
-                moving = true;
-                if (variable > 0)
-                {
-                    foreach (Collider2D col in detectionCols)
-                    {
-                        if (col.gameObject.name == "topCol")
-                        {
-                            col.enabled = true;
-                        }
-                    }
-                }
-                if (variable < 0)
-                {
-                    foreach (Collider2D col in detectionCols)
-                    {
-                        if (col.gameObject.name == "bottomCol")
-                        {
-                            col.enabled = true;
-                        }
-                    }
-                }
-                break;
-            default:
-                Debug.Log("Switch Case Error: undefined char");
-                break;
+            }
         }
+        else if(variable.x < 0)
+        {
+            newPos.x += variable.x;
+            moving = true;
+            foreach (Collider2D col in detectionCols)
+            {
+                if (col.gameObject.name == "leftCol")
+                {
+                    col.enabled = true;
+                }
+            }
+        }
+
+        if(variable.y > 0)
+        {
+            newPos.y += variable.y;
+            moving = true;
+            foreach (Collider2D col in detectionCols)
+            {
+                if (col.gameObject.name == "topCol")
+                {
+                    col.enabled = true;
+                }
+            }
+        }
+        else if(variable.y < 0)
+        {
+            newPos.y += variable.y;
+            moving = true;
+            foreach (Collider2D col in detectionCols)
+            {
+                if (col.gameObject.name == "bottomCol")
+                {
+                    col.enabled = true;
+                }
+            }
+        }
+
     }
 
     public void MoveBack()
     {
-        gameObject.transform.position = previousPos;
         newPos = previousPos;
+        moving = true;
         foreach (Collider2D col in detectionCols)
         {
             if (col.transform.childCount > 0)

@@ -6,6 +6,7 @@ public class GenericClass
 {
     static public object condition, thenobj, action;
     static public object basicValue;
+    static public int loopCount;
 
     public void SetConditions(VariableSlot slot, object value)
     {
@@ -33,6 +34,16 @@ public class GenericClass
             case VariableSlot.SlotType.Conditional:
                 SetConditions(slot, value);
                 break;
+            case VariableSlot.SlotType.Looper:
+                if(slot.thisConditionType == VariableSlot.ConditionType.LoopInt)
+                {
+                    loopCount = (int)value;
+                }
+                else
+                {
+                    basicValue = value;
+                }
+                break;
         }
     }
 }
@@ -40,8 +51,6 @@ public class GenericClass
 public class CodeHandler : MonoBehaviour {
 
     public string functionString;
-    public char charValue;
-
     //References
     public ObjectSelection ObjInt;
 
@@ -49,14 +58,11 @@ public class CodeHandler : MonoBehaviour {
     void Start () {
         ObjInt = GameObject.Find("Main Camera").GetComponent<ObjectSelection>();
     }
-	
+
     public void DoTheMoveThing()
     {
         MovableObject data = ObjInt.currentObject.GetComponent<MovableObject>();
-        if ((float)GenericClass.basicValue != 0 && (charValue == 'y' || charValue == 'x'))
-        {
-            data.MoveObject((float)GenericClass.basicValue, charValue);
-        }
+        data.MoveObject((Vector2)GenericClass.basicValue);
     }
 
     public void DoTheColliderThing()
@@ -86,27 +92,31 @@ public class CodeHandler : MonoBehaviour {
         data.RunCondition(GenericClass.condition, GenericClass.thenobj, GenericClass.action);
     }
 
+    public void DoTheLoopThing()
+    {
+        Debug.Log("Run Loop: " + GenericClass.loopCount + " : " + GenericClass.basicValue);
+        MovableObject data = ObjInt.currentObject.GetComponent<MovableObject>();
+        data.looping = true;
+        Invoke(functionString, 1);
+    }
+
     public void BackPeddle(DragAndDropItem item)
     {
         MovableObject moveData = ObjInt.currentObject.GetComponent<MovableObject>();
         ObjectChanger ObjChangData = ObjInt.currentObject.GetComponent<ObjectChanger>();
         switch (item.itemVariableType)
         {
-            case VariableType.Type.Float:
-                moveData = ObjInt.currentObject.GetComponent<MovableObject>();
+            case VariableType.Type.Vector2:
                 moveData.MoveBack();
                 break;
             case VariableType.Type.Bool:
-                ObjChangData = ObjInt.currentObject.GetComponent<ObjectChanger>();
                 ObjChangData.ToggleCollider(ObjChangData.originalBool);
                 break;
             case VariableType.Type.GameObject:
-                ObjChangData = ObjInt.currentObject.GetComponent<ObjectChanger>();
                 ObjChangData.newTarget = ObjChangData.originalTarget;
                 ObjChangData.ChangeTarget();
                 break;
             case VariableType.Type.Sprite:
-                ObjChangData = ObjInt.currentObject.GetComponent<ObjectChanger>();
                 ObjChangData.newObject = ObjChangData.originalObject;
                 ObjChangData.ChangeSprite();
                 break;
@@ -117,7 +127,18 @@ public class CodeHandler : MonoBehaviour {
 
     public void ConditionalBackPeddle(DragAndDropItem item)
     {
-        //Do Something
-        Debug.Log("ConditionBackPeddle: ");
+        ObjectChanger data = ObjInt.currentObject.GetComponent<ObjectChanger>();
+        Debug.Log("ConditionBackPeddle: " + GenericClass.condition + " : " + GenericClass.thenobj + " : " + data.OriginalAction);
+        switch(data.thisCondition)
+        {
+            case ObjectChanger.Conditions.BoolToFloat:
+                MovableObject moveData = ObjInt.currentObject.GetComponent<MovableObject>();
+                moveData.MoveBack();
+                break;
+            default:
+                data.RunCondition(GenericClass.condition, GenericClass.thenobj, data.OriginalAction);
+                break;
+
+        }
     }
 }

@@ -50,7 +50,7 @@ public class ObjectChanger : MonoBehaviour {
 
     public void ChangeSprite()
     {
-        if(gameObject.name == "Enemy")
+        if (gameObject.name == "Enemy")
         {
             EnemyObject enemy = gameObject.GetComponent<EnemyObject>();
             enemy.ammo = newObject;
@@ -59,26 +59,45 @@ public class ObjectChanger : MonoBehaviour {
 
     public void RunCondition(object condition, object thenObject, object action)
     {
-        switch(thisCondition)
+        switch (thisCondition)
         {
             case Conditions.BoolToBool:
                 Debug.Log(thenObject.GetType().Name.ToString());
-                if(thenObject.GetType().Name == "GameObject")
+                if (thenObject.GetType().Name == "GameObject")
                 {
                     Debug.Log(condition.GetType().Name.ToString() + " : " + action.GetType().Name.ToString());
                     if (condition.GetType().Name == "Boolean" && action.GetType().Name == "Boolean")
                     {
-                        if(GetComponent<Collider2D>().enabled == (bool)condition)
+                        if (GetComponent<Collider2D>().enabled == (bool)condition)
                         {
                             Cousin = (GameObject)thenObject;
-                            Cousin.GetComponent<Collider2D>().enabled = (bool)action;
+                            OriginalAction = Cousin.GetComponent<Collider2D>().isActiveAndEnabled;
+                            Debug.Log("OriginalAction: " + OriginalAction);
+                            Cousin.GetComponent<ObjectChanger>().ToggleCollider((bool)action);
                             Debug.Log("Affect Cousin: " + Cousin + " : " + action);
                         }
                     }
                 }
                 break;
             case Conditions.BoolToFloat:
+                Debug.Log(thenObject.GetType().Name.ToString());
+                if (thenObject.GetType().Name == "GameObject")
+                {
+                    Debug.Log(condition.GetType().Name.ToString() + " : " + action.GetType().Name.ToString());
+                    if (condition.GetType().Name == "Boolean" && action.GetType().Name == "Vector2")
+                    {
+                        if (GetComponent<Collider2D>().enabled == (bool)condition)
+                        {
+                            Cousin = (GameObject)thenObject;
+                            OriginalAction = (Vector2)Cousin.transform.position;
+                            Debug.Log("OriginalAction: " + OriginalAction);
+                            Cousin.GetComponent<MovableObject>().MoveObject((Vector2)action);
+                            Debug.Log("Affect Cousin: " + Cousin + " : " + action);
+                        }
+                    }
+                }
                 break;
         }
     }
+
 }

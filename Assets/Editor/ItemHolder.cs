@@ -10,15 +10,15 @@ using UnityEditor;
 public class ItemHolder : Editor
 {
     SerializedProperty itemVariableTypeProp;
-    SerializedProperty floatProp;
+    SerializedProperty Vector2Prop;
     SerializedProperty boolProp;
-    SerializedProperty charProp;
     SerializedProperty GOProp;
     SerializedProperty SprProp;
+    SerializedProperty IntProp;
 
     SerializedProperty itemTypeProp;
 
-    SerializedProperty conditionalslots;
+    SerializedProperty LayeredSlots;
 
     void OnEnable()
     {
@@ -26,13 +26,13 @@ public class ItemHolder : Editor
         
         // Setup the SerializedProperties.
         itemVariableTypeProp = serializedObject.FindProperty("itemVariableType");
-        floatProp = serializedObject.FindProperty("float_prop");
+        Vector2Prop = serializedObject.FindProperty("vector2_prop");
         boolProp = serializedObject.FindProperty("bool_prop");
-        charProp = serializedObject.FindProperty("char_prop");
         GOProp = serializedObject.FindProperty("GO_prop");
         SprProp = serializedObject.FindProperty("sprite_prop");
+        IntProp = serializedObject.FindProperty("int_prop");
 
-        conditionalslots = serializedObject.FindProperty("ConditionalSlots");
+        LayeredSlots = serializedObject.FindProperty("LayeredSlots");
 
     }
 
@@ -43,7 +43,7 @@ public class ItemHolder : Editor
 
         EditorGUILayout.PropertyField(itemVariableTypeProp);
 
-        EditorList.Show(serializedObject.FindProperty("ConditionalSlots"), EditorListOption.ListLabel | EditorListOption.Buttons);
+        EditorList.Show(serializedObject.FindProperty("LayeredSlots"), EditorListOption.ListLabel | EditorListOption.Buttons);
 
         VariableType.Type type = (VariableType.Type)itemVariableTypeProp.enumValueIndex;
 
@@ -53,12 +53,8 @@ public class ItemHolder : Editor
             case DragAndDropItem.ItemType.Basic:
                 switch (type)
                 {
-                    case VariableType.Type.Float:
-                        floatProp.floatValue = EditorGUILayout.FloatField("FloatProp", floatProp.floatValue, GUILayout.MinWidth(50));
-                        EditorGUILayout.PropertyField(charProp, new GUIContent("CharProp"));
-                        break;
-                    case VariableType.Type.Char:
-                        EditorGUILayout.PropertyField(charProp, new GUIContent("CharProp"));
+                    case VariableType.Type.Vector2:
+                        EditorGUILayout.PropertyField(Vector2Prop, new GUIContent("Vector2Prop"));
                         break;
                     case VariableType.Type.Bool:
                         EditorGUILayout.PropertyField(boolProp, new GUIContent("BoolProp"));
@@ -69,6 +65,9 @@ public class ItemHolder : Editor
                     case VariableType.Type.Sprite:
                         EditorGUILayout.PropertyField(SprProp, new GUIContent("SpriteProp"));
                         break;
+                    case VariableType.Type.Int:
+                        EditorGUILayout.PropertyField(IntProp, new GUIContent("IntProp"));
+                        break;
                     default:
                         break;
                 }
@@ -76,13 +75,9 @@ public class ItemHolder : Editor
             case DragAndDropItem.ItemType.Option:
                 switch (type)
                 {
-                    case VariableType.Type.Float:
-                        EditorList.Show(serializedObject.FindProperty("floatList_prop"), EditorListOption.ListLabel | EditorListOption.Buttons);
-                        EditorGUILayout.PropertyField(charProp, new GUIContent("CharProp"));
-                        break;
-                    case VariableType.Type.Char:
-                        EditorList.Show(serializedObject.FindProperty("charList_prop"), EditorListOption.ListLabel | EditorListOption.Buttons);
-                        EditorGUILayout.PropertyField(charProp, new GUIContent("CharProp"));
+                    case VariableType.Type.Vector2:
+                        EditorList.Show(serializedObject.FindProperty("vector2List_Prop"), EditorListOption.ListLabel | EditorListOption.Buttons);
+                        EditorGUILayout.PropertyField(Vector2Prop, new GUIContent("Vector2Prop"));
                         break;
                     case VariableType.Type.Bool:
                         EditorList.Show(serializedObject.FindProperty("boolList_prop"), EditorListOption.ListLabel | EditorListOption.Buttons);
@@ -95,6 +90,10 @@ public class ItemHolder : Editor
                     case VariableType.Type.Sprite:
                         EditorList.Show(serializedObject.FindProperty("spriteList_prop"), EditorListOption.ListLabel | EditorListOption.Buttons);
                         EditorGUILayout.PropertyField(SprProp, new GUIContent("SpriteProp"));
+                        break;
+                    case VariableType.Type.Int:
+                        EditorList.Show(serializedObject.FindProperty("intList_prop"), EditorListOption.ListLabel | EditorListOption.Buttons);
+                        EditorGUILayout.PropertyField(IntProp, new GUIContent("IntProp"));
                         break;
                     default:
                         break;

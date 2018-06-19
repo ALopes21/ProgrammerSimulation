@@ -14,6 +14,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
     {
         Basic,
         Conditional,
+        Looper
     }
 
     public enum ConditionType
@@ -22,12 +23,13 @@ public class VariableSlot : MonoBehaviour, IDropHandler
         This,
         Then,
         That,
+        LoopInt,
         None
     }
 
     public SlotType thisSlotType = SlotType.Basic;
     public ConditionType thisConditionType = ConditionType.If;
-    public VariableType.Type slotVariableType = VariableType.Type.Float;
+    public VariableType.Type slotVariableType = VariableType.Type.Vector2;
     public bool isTaken;
     public DragAndDropItem parentItem;
 
@@ -137,17 +139,17 @@ public class VariableSlot : MonoBehaviour, IDropHandler
             case VariableType.Type.Bool:
                 GetComponent<Image>().color = Color.cyan;
                 break;
-            case VariableType.Type.Float:
+            case VariableType.Type.Vector2:
                 GetComponent<Image>().color = Color.blue;
-                break;
-            case VariableType.Type.Char:
-                GetComponent<Image>().color = Color.red;
                 break;
             case VariableType.Type.GameObject:
                 GetComponent<Image>().color = Color.magenta;
                 break;
             case VariableType.Type.Sprite:
                 GetComponent<Image>().color = Color.yellow;
+                break;
+            case VariableType.Type.Int:
+                GetComponent<Image>().color = Color.red;
                 break;
             case VariableType.Type.None:
                 GetComponent<Image>().color = Color.grey; //Use for all Inventory Slots!
