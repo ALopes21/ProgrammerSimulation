@@ -18,8 +18,6 @@ public class ItemHolder : Editor
 
     SerializedProperty itemTypeProp;
 
-    SerializedProperty LayeredSlots;
-
     void OnEnable()
     {
         itemTypeProp = serializedObject.FindProperty("itemType");
@@ -32,8 +30,6 @@ public class ItemHolder : Editor
         SprProp = serializedObject.FindProperty("sprite_prop");
         IntProp = serializedObject.FindProperty("int_prop");
 
-        LayeredSlots = serializedObject.FindProperty("LayeredSlots");
-
     }
 
     public override void OnInspectorGUI()
@@ -42,8 +38,6 @@ public class ItemHolder : Editor
         EditorGUILayout.PropertyField(itemTypeProp);
 
         EditorGUILayout.PropertyField(itemVariableTypeProp);
-
-        EditorList.Show(serializedObject.FindProperty("LayeredSlots"), EditorListOption.ListLabel | EditorListOption.Buttons);
 
         VariableType.Type type = (VariableType.Type)itemVariableTypeProp.enumValueIndex;
 

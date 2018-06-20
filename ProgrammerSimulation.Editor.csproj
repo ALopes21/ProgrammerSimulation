@@ -368,6 +368,8 @@
   <ItemGroup>
     <Compile Include="Assets\Editor\EditorList.cs" />
     <Compile Include="Assets\Editor\ItemHolder.cs" />
+    <Compile Include="Assets\Editor\ObjectSelectionEditor.cs" />
+    <Compile Include="Assets\Editor\SlotHolder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />

@@ -16,7 +16,8 @@ namespace UnityStandardAssets.Utility
             Enable = 3,     // Enable a component
             Animate = 4,    // Start animation on target
             Deactivate = 5,  // Decativate target GameObject
-            GetVariables = 6    //Put variables into slots and destroy chest
+            GetVariables = 6,    //Put variables into slots and destroy chest
+            LoadScene = 7 //load next scene
         }
 
         public Mode action = Mode.Activate;         // The action to accomplish
@@ -68,22 +69,7 @@ namespace UnityStandardAssets.Utility
                         }
                         break;
                     case Mode.Activate:
-                        if(col.tag == "Player")
-                        {
-                            switch (this.gameObject.name)
-                            {
-                                case "Finishline":
-                                    handler.LoadScene(0);
-                                    handler.UpdateLevelInfo();
-                                    break;
-                                case "Killzone":
-                                    targetGameObject.SetActive(true);
-                                    handler.gameOver = true;
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
+                        
                         break;
                     case Mode.Enable:
                         if (targetBehaviour != null)
@@ -117,6 +103,24 @@ namespace UnityStandardAssets.Utility
                                     }
                                 }
                             }
+                        break;
+                    case Mode.LoadScene:
+                        if (col.tag == "Player")
+                        {
+                            switch (this.gameObject.name)
+                            {
+                                case "Finishline":
+                                    handler.LoadScene(0);
+                                    handler.UpdateLevelInfo();
+                                    break;
+                                case "Killzone":
+                                    targetGameObject.SetActive(true);
+                                    handler.gameOver = true;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
                         break;
                 }
             }

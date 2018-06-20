@@ -65,7 +65,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
         if (thisConditionType == ConditionType.If)
         {
            GetComponent<Image>().sprite = (Sprite)Resources.Load("SlotSprites/" + ObjInt.currentObject.ToString(), typeof(Sprite));
-            GetComponent<VariableSlot>().enabled = false; 
+           GetComponent<VariableSlot>().enabled = false; 
         }
     }
 
