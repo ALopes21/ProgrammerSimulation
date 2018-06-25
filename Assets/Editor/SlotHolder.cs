@@ -12,15 +12,14 @@ public class SlotHolder : Editor
     SerializedProperty slotVariableType;
     SerializedProperty slotConditionType;
     SerializedProperty slotType;
-    SerializedProperty parentItem;
     SerializedProperty isTaken;
+    SerializedProperty layeredSlots;
 
     void OnEnable()
     {
         slotVariableType = serializedObject.FindProperty("slotVariableType");
         slotConditionType = serializedObject.FindProperty("thisConditionType");
         slotType = serializedObject.FindProperty("thisSlotType");
-        parentItem = serializedObject.FindProperty("parentItem");
         isTaken = serializedObject.FindProperty("isTaken");
 
     }
@@ -107,8 +106,8 @@ public class SlotHolder : Editor
 
         }
         EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.PropertyField(parentItem);
         EditorGUILayout.PropertyField(isTaken);
+        EditorList.Show(serializedObject.FindProperty("LayeredSlots"), EditorListOption.ListLabel | EditorListOption.Buttons);
         EditorGUI.EndDisabledGroup();
 
         serializedObject.ApplyModifiedProperties();

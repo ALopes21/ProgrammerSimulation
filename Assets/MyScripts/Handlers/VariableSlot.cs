@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// Every item's cell must contain this script
@@ -31,11 +32,13 @@ public class VariableSlot : MonoBehaviour, IDropHandler
     public ConditionType thisConditionType = ConditionType.If;
     public VariableType.Type slotVariableType = VariableType.Type.Vector2;
     public bool isTaken;
-    public DragAndDropItem parentItem;
-
     VariableValueHandler valueHandler;
-
     ObjectSelection ObjInt;
+
+    public List<GameObject> LayeredSlots = new List<GameObject>();
+
+    public string OriginalText;
+    public Color OriginalColor;
 
     public struct DropDescriptor                                            // Struct with info about item's drop event
     {
@@ -58,6 +61,26 @@ public class VariableSlot : MonoBehaviour, IDropHandler
 
     void Start()
     {
+        if(gameObject.tag != "Slot")
+        {
+            OriginalText = gameObject.GetComponentInChildren<Text>().text;
+            OriginalColor = gameObject.GetComponentInChildren<Text>().color;
+        }
+
+        if (slotVariableType == VariableType.Type.Layered)
+        {
+            Transform panel = transform.GetChild(1);
+            foreach (Transform child in panel)
+            {
+                if (child.gameObject.tag == "LayeredSlots")
+                {
+                    if (!LayeredSlots.Contains(child.gameObject))
+                    { LayeredSlots.Add(child.gameObject); }
+
+                }
+            }
+        }
+
         //SetBackgroundState(GetComponentInChildren<DragAndDropItem>() == null ? false : true);
         SetBackgroundState(slotVariableType);
         valueHandler = GameObject.Find("Main Camera").GetComponent<VariableValueHandler>();
@@ -67,6 +90,12 @@ public class VariableSlot : MonoBehaviour, IDropHandler
            GetComponent<Image>().sprite = (Sprite)Resources.Load("SlotSprites/" + ObjInt.currentObject.ToString(), typeof(Sprite));
            GetComponent<VariableSlot>().enabled = false; 
         }
+    }
+
+    public void ResetSlot()
+    {
+        gameObject.GetComponentInChildren<Text>().text = OriginalText;
+        gameObject.GetComponentInChildren<Text>().color = OriginalColor;
     }
 
     /// <summary>
@@ -137,25 +166,32 @@ public class VariableSlot : MonoBehaviour, IDropHandler
         switch (type)
         {
             case VariableType.Type.Bool:
-                GetComponent<Image>().color = Color.cyan;
+                //GetComponentInChildren<Text>().color = Color.red;
                 break;
             case VariableType.Type.Vector2:
-                GetComponent<Image>().color = Color.blue;
+                GetComponentInChildren<Text>().color = Color.blue;
                 break;
             case VariableType.Type.GameObject:
-                GetComponent<Image>().color = Color.magenta;
+                GetComponentInChildren<Text>().color = Color.magenta;
                 break;
             case VariableType.Type.Sprite:
-                GetComponent<Image>().color = Color.yellow;
+                GetComponentInChildren<Text>().color = Color.yellow;
                 break;
             case VariableType.Type.Int:
-                GetComponent<Image>().color = Color.red;
+                GetComponentInChildren<Text>().color = Color.cyan;
+                break;
+            case VariableType.Type.Layered:
+                GetComponentInChildren<Text>().color = Color.green;
                 break;
             case VariableType.Type.None:
                 GetComponent<Image>().color = Color.grey; //Use for all Inventory Slots!
+                if (thisConditionType == ConditionType.If)
+                {
+                    GetComponent<Image>().color = Color.clear;
+                }
                 break;
             case VariableType.Type.Any:
-                GetComponent<Image>().color = Color.white;
+                GetComponentInChildren<Text>().color = Color.white;
                 break;
             default:
                 Debug.Log("An error occurred");
@@ -233,4 +269,5 @@ public class VariableSlot : MonoBehaviour, IDropHandler
             }
         }
     }
+
 }

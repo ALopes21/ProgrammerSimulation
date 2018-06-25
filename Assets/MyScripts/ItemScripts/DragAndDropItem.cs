@@ -17,8 +17,6 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         Option
     }
 
-    public List<GameObject> LayeredSlots = new List<GameObject>();
-
     //Current value
     public string vector2_prop;
     public char char_prop;
@@ -57,27 +55,12 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         gameObject.GetComponent<Button>().interactable = false;
         valueHandler = GameObject.Find("Main Camera").GetComponent<VariableValueHandler>();
 
-        if(itemVariableType != VariableType.Type.Layered)// && itemVariableType != VariableType.Type.Loop)
-        {
-            dropdown = gameObject.transform.GetChild(1).gameObject.GetComponent<Dropdown>();
-            dropdown.gameObject.SetActive(false);
-        }
+        dropdown = gameObject.transform.GetChild(1).gameObject.GetComponent<Dropdown>();
+        dropdown.gameObject.SetActive(false);
+
         if(itemType != ItemType.Option)
         {
             gameObject.GetComponent<Button>().interactable = false;
-        }
-        if(itemVariableType == VariableType.Type.Layered)
-        {
-            Transform panel = transform.GetChild(1);
-            foreach(Transform child in panel)
-            {
-                if (child.gameObject.tag == "LayeredSlots")
-                {
-                    if(!LayeredSlots.Contains(child.gameObject))
-                    { LayeredSlots.Add(child.gameObject); }
-
-                }
-            }
         }
         SetUpStartProp();
     }
@@ -138,6 +121,10 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                     originalString = int_prop.ToString();
                 }
                 break;
+            case VariableType.Type.Layered:
+                originalColor = Color.white;
+                originalString = "!";
+                break;
             case VariableType.Type.Any:
                 originalColor = Color.grey;
                 originalString = "";
@@ -155,16 +142,16 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public void OnBeginDrag(PointerEventData eventData)
     {
         sourceCell = GetComponentInParent<VariableSlot>();
-        draggedItem = this;                                                         // Set as dragged item
-        icon = new GameObject("Icon");                                              // Create object for item's icon
-        Image image = icon.AddComponent<Image>();                                   //Add the Image component to the Icon
-        image.sprite = GetComponent<Image>().sprite;                                //Give Icon.sprite this.sprite
-        image.color = GetComponent<Image>().color;                                  //Give Icon.color this.color
-        image.raycastTarget = false;                                                // Disable icon's raycast for correct drop handling
+        draggedItem = this;                                                             // Set as dragged item
+        icon = new GameObject("Icon");                                                  // Create object for item's icon
+        Image image = icon.AddComponent<Image>();                                       //Add the Image component to the Icon
+        image.sprite = (Sprite)Resources.Load("ItemSprites/Loading", typeof(Sprite));   //Give Icon.sprite this.sprite
+        image.color = Color.white;                                                      //Give Icon.color this.color
+        image.raycastTarget = false;                                                    // Disable icon's raycast for correct drop handling
         RectTransform iconRect = icon.GetComponent<RectTransform>();
         // Set icon's dimensions
-        iconRect.sizeDelta = new Vector2(   GetComponent<RectTransform>().sizeDelta.x,
-                                            GetComponent<RectTransform>().sizeDelta.y);
+        iconRect.sizeDelta = new Vector2(25, 25);
+
         Canvas canvas = GetComponentInParent<Canvas>();                             // Get parent canvas
         if (canvas != null)
         {

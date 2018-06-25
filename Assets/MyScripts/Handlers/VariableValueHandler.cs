@@ -34,6 +34,7 @@ public class VariableValueHandler : MonoBehaviour
         else if(slot.slotVariableType == VariableType.Type.None)
         {
             item.gameObject.GetComponent<Button>().interactable = false;
+            SetupItemImage(item, item.originalColor, item.originalString);
 
             switch(sourceCell.slotVariableType)
             {
@@ -43,29 +44,34 @@ public class VariableValueHandler : MonoBehaviour
                     break;
                 case VariableType.Type.Layered:
                     Debug.Log("Move Item Back to Inventory From Condition Slot");
-                    slot.SetItem(item, sourceCell);
-                    GameObject LayeredPanel = item.gameObject.transform.GetChild(1).gameObject;
+                    GameObject LayeredPanel = sourceCell.gameObject.transform.GetChild(1).gameObject;
                     LayeredPanel.SetActive(false);
+
+                    slot.SetItem(item, sourceCell);
+
                     //if the items conditional slots have items in them, put them back in the inventory
-                    foreach (GameObject g in item.LayeredSlots)
+                    foreach (GameObject g in sourceCell.LayeredSlots)
                     {
-                        if (g.transform.childCount > 0)
+                        if (g.transform.childCount > 1)
                         {
-                            GameObject thisItem = g.transform.GetChild(0).gameObject;
+                            GameObject thisItem = g.transform.GetChild(1).gameObject;
+                            Debug.Log(thisItem.name);
                             for (int s = 0; s < sceneHandler.InvSlots.Length; s++)
                             {
                                 if (sceneHandler.InvSlots[s].GetComponent<VariableSlot>().isTaken == false)
                                 {
                                     sceneHandler.InvSlots[s].GetComponent<VariableSlot>().PlaceItem(thisItem);
                                     Destroy(thisItem);
+                                    g.GetComponent<VariableSlot>().ResetSlot();
                                     break;
 
                                 }
                             }
                         }
                     }
+
                     //if all conditional slots are taken then backpeddle
-                    if (AllLayeredSlotsTaken(item.LayeredSlots) == true)
+                    if (AllLayeredSlotsTaken(sourceCell.LayeredSlots) == true)
                     {
                         Debug.Log("Conditional Backpeddle");
                         handler = ObjInt.activePanel.GetComponent<CodeHandler>();
@@ -95,6 +101,7 @@ public class VariableValueHandler : MonoBehaviour
                     }
                     break;
             }
+            sourceCell.ResetSlot();
         }
         //if dropped in wrong slot
         else
@@ -123,55 +130,46 @@ public class VariableValueHandler : MonoBehaviour
     public void SetItemValues(DragAndDropItem item, VariableSlot slot)
     {
         handler = ObjInt.activePanel.GetComponent<CodeHandler>();
+        SetupItemImage(item, Color.clear, "");
+        item.GetComponent<RectTransform>().sizeDelta = new Vector2(50, 10);
         switch (item.itemVariableType)
         {
             case VariableType.Type.Vector2:
                 Vector2 newPosition = GetVector2(item.vector2_prop);
                 Class.SetValues(slot, newPosition);
-                SetupItemImage(item, Color.blue, item.vector2_prop);
+                SetSlotImage(slot, "(" + item.vector2_prop + ");");
                 handler.functionString = "DoTheMoveThing";
                 CallCodeHandler(slot);
                 break;
             case VariableType.Type.Bool:
                 Class.SetValues(slot, item.bool_prop);
-                if (item.bool_prop == true)
-                {
-                    SetupItemImage(item, Color.green, "T");
-                }
-                else if (item.bool_prop == false)
-                {
-                    SetupItemImage(item, Color.red, "F");
-                }
+                SetSlotImage(slot, item.bool_prop.ToString() + ";");
                 handler.functionString = "DoTheColliderThing";
                 CallCodeHandler(slot);
                 break;
             case VariableType.Type.GameObject:
                 Class.SetValues(slot, item.GO_prop);
-                SetupItemImage(item, Color.white, item.GO_prop.name);
+                SetSlotImage(slot, item.GO_prop.name + ";");
                 handler.functionString = "DoTheObjectThing";
                 CallCodeHandler(slot);
                 break;
             case VariableType.Type.Sprite:
                 Class.SetValues(slot, item.sprite_prop);
-                SetupItemImage(item, Color.white, item.sprite_prop.name);
+                SetSlotImage(slot, item.sprite_prop.name + ";");
                 handler.functionString = "DoTheSpriteThing";
                 CallCodeHandler(slot);
                 break;
             case VariableType.Type.Layered:
-                GameObject LayeredPanel = item.gameObject.transform.GetChild(1).gameObject;
+
+                GameObject LayeredPanel = slot.gameObject.transform.GetChild(1).gameObject;
                 LayeredPanel.SetActive(true);
-                foreach (Transform child in LayeredPanel.transform)
-                {
-                    if (child.gameObject.tag == "LayeredSlots")
-                    {
-                        child.gameObject.GetComponent<VariableSlot>().parentItem = item;
-                    }
-                }
+                SetSlotImage(slot, "");
+
                 break;
             case VariableType.Type.Int:
                 Class.SetValues(slot, item.int_prop);
-                SetupItemImage(item, Color.red, item.int_prop.ToString());
-                if(slot.thisSlotType == VariableSlot.SlotType.Looper)
+                SetSlotImage(slot, item.int_prop.ToString() + ";");
+                if (slot.thisSlotType == VariableSlot.SlotType.Looper)
                 {
                     CallCodeHandler(slot);
                 }
@@ -241,14 +239,6 @@ public class VariableValueHandler : MonoBehaviour
     {
         switch (item.itemVariableType)
         {
-            case VariableType.Type.Vector2:
-                item.gameObject.GetComponent<Image>().color = color; //gameObject.GetComponent<Image>().sprite = FloatSprite;
-                item.gameObject.GetComponentInChildren<Text>().text = display;
-                break;
-            case VariableType.Type.Bool:
-                item.gameObject.GetComponent<Image>().color = color; //gameObject.GetComponent<Image>().sprite = BoolSprite;
-                item.gameObject.GetComponentInChildren<Text>().text = display;
-                break;
             case VariableType.Type.GameObject:
                 item.gameObject.GetComponent<Image>().color = color;
                 item.gameObject.GetComponent<Image>().sprite = (Sprite)Resources.Load("ItemSprites/" + display, typeof(Sprite));
@@ -259,17 +249,21 @@ public class VariableValueHandler : MonoBehaviour
                 item.gameObject.GetComponent<Image>().sprite = (Sprite)Resources.Load("ItemSprites/" + display, typeof(Sprite));
                 item.gameObject.GetComponentInChildren<Text>().text = "";
                 break;
-            case VariableType.Type.Int:
-                item.gameObject.GetComponent<Image>().color = color;
-                item.gameObject.GetComponentInChildren<Text>().text = display;
-                break;
             case VariableType.Type.Any:
                 item.gameObject.GetComponent<Image>().color = color; //gameObject.GetComponent<Image>().sprite = AnySprite;
                 item.gameObject.GetComponentInChildren<Text>().text = display;
                 break;
             default:
+                item.gameObject.GetComponent<Image>().color = color;
+                item.gameObject.GetComponentInChildren<Text>().text = display;
                 break;
         }
+    }
+
+    public void SetSlotImage(VariableSlot slot, string display)
+    {
+        slot.GetComponentInChildren<Text>().text = display;
+        slot.GetComponentInChildren<Text>().color = Color.white;
     }
 
 
@@ -277,7 +271,7 @@ public class VariableValueHandler : MonoBehaviour
     //Repeated Checks//
     public bool AllLayeredSlotsTaken(List<GameObject> slots)
     {
-        foreach(GameObject g in slots)
+        foreach (GameObject g in slots)
         {
             if (g.GetComponent<VariableSlot>().isTaken == false)
             {
@@ -289,7 +283,7 @@ public class VariableValueHandler : MonoBehaviour
     public void CheckIFConditionalBackPeddle(DragAndDropItem item, VariableSlot source)
     {
         int takenCount = 0;
-        foreach (GameObject g in source.parentItem.LayeredSlots)
+        foreach (GameObject g in source.LayeredSlots)
         {
             if (g.GetComponent<VariableSlot>().isTaken == true)
             {
@@ -306,19 +300,20 @@ public class VariableValueHandler : MonoBehaviour
 
     public void CallCodeHandler(VariableSlot slot)
     {
+
         switch (slot.thisSlotType)
         {
             case VariableSlot.SlotType.Basic:
                 handler.Invoke(handler.functionString, 0);
                 break;
             case VariableSlot.SlotType.Conditional:
-                if (AllLayeredSlotsTaken(slot.parentItem.LayeredSlots) == true)
+                if (AllLayeredSlotsTaken(slot.gameObject.transform.parent.GetComponentInParent<VariableSlot>().LayeredSlots) == true)
                 {
                     handler.DoTheConditionThing();
                 }
                 break;
             case VariableSlot.SlotType.Looper:
-                if(AllLayeredSlotsTaken(slot.parentItem.LayeredSlots) == true)
+                if(AllLayeredSlotsTaken(slot.gameObject.transform.parent.GetComponentInParent<VariableSlot>().LayeredSlots) == true)
                 {
                     handler.DoTheLoopThing();
                 }
