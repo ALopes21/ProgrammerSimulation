@@ -18,6 +18,9 @@ public class ItemHolder : Editor
 
     SerializedProperty itemTypeProp;
 
+    SerializedProperty originalColour;
+    SerializedProperty originalString;
+
     void OnEnable()
     {
         itemTypeProp = serializedObject.FindProperty("itemType");
@@ -29,6 +32,9 @@ public class ItemHolder : Editor
         GOProp = serializedObject.FindProperty("GO_prop");
         SprProp = serializedObject.FindProperty("sprite_prop");
         IntProp = serializedObject.FindProperty("int_prop");
+
+        originalColour = serializedObject.FindProperty("originalColor");
+        originalString = serializedObject.FindProperty("originalString");
 
     }
 
@@ -97,6 +103,11 @@ public class ItemHolder : Editor
                 break;
 
         }
+
+        EditorGUI.BeginDisabledGroup(true);
+        EditorGUILayout.PropertyField(originalColour);
+        EditorGUILayout.PropertyField(originalString);
+        EditorGUI.EndDisabledGroup();
 
         serializedObject.ApplyModifiedProperties();
     }

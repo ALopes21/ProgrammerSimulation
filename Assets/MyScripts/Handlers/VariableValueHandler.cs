@@ -20,94 +20,66 @@ public class VariableValueHandler : MonoBehaviour
     public void CheckSlotVariableType(DragAndDropItem item, VariableSlot slot)
     {
         VariableSlot sourceCell = DragAndDropItem.sourceCell;
-        //if dropped in the object slot of with the same variableType or Any
-        if (slot.slotVariableType == item.itemVariableType || slot.slotVariableType == VariableType.Type.Any)
-        {
-            if(sourceCell.thisSlotType == VariableSlot.SlotType.Conditional)
-            {
-                CheckIFConditionalBackPeddle(item, sourceCell);
-            }
-            slot.SetItem(item, sourceCell);
-            CheckItemType(item, slot);
-        }
-        //if dropped in inventory
-        else if(slot.slotVariableType == VariableType.Type.None)
-        {
-            item.gameObject.GetComponent<Button>().interactable = false;
-            SetupItemImage(item, item.originalColor, item.originalString);
+        Debug.Log("Setting Item: " + item.name + " in " + slot.name);
 
-            switch(sourceCell.slotVariableType)
-            {
-                case VariableType.Type.None:
+        switch (sourceCell.slotVariableType)
+        {
+            case VariableType.Type.None: //if sourcecell is an Inventory Slot
+                if (slot.slotVariableType == VariableType.Type.None)
+                {
                     Debug.Log("Moved within Inventory");
                     slot.SetItem(item, sourceCell);
-                    break;
-                case VariableType.Type.Layered:
-                    Debug.Log("Move Item Back to Inventory From Condition Slot");
-                    GameObject LayeredPanel = sourceCell.gameObject.transform.GetChild(1).gameObject;
-                    LayeredPanel.SetActive(false);
-
+                }
+                else if(slot.slotVariableType == item.itemVariableType || slot.slotVariableType == VariableType.Type.Any)
+                {
+                    Debug.Log("Dropped into the CodePanel");
                     slot.SetItem(item, sourceCell);
+                    CheckItemType(item, slot);
+                }
+                else{ Debug.Log("Incorrect Variable Type"); sceneHandler.lives--;}
+                break;
 
-                    //if the items conditional slots have items in them, put them back in the inventory
-                    foreach (GameObject g in sourceCell.LayeredSlots)
-                    {
-                        if (g.transform.childCount > 1)
-                        {
-                            GameObject thisItem = g.transform.GetChild(1).gameObject;
-                            Debug.Log(thisItem.name);
-                            for (int s = 0; s < sceneHandler.InvSlots.Length; s++)
-                            {
-                                if (sceneHandler.InvSlots[s].GetComponent<VariableSlot>().isTaken == false)
-                                {
-                                    sceneHandler.InvSlots[s].GetComponent<VariableSlot>().PlaceItem(thisItem);
-                                    Destroy(thisItem);
-                                    g.GetComponent<VariableSlot>().ResetSlot();
-                                    break;
+            case VariableType.Type.Layered: //if source cell is a layered slot
+                if(slot.slotVariableType == VariableType.Type.None)
+                {
+                    Debug.Log("Move layered to inv & all slots inside");
+                    slot.isTaken = true;
+                    ResetLayeredSlots(sourceCell, item);
+                    item.gameObject.GetComponent<Button>().interactable = false;
+                    slot.SetItem(item, sourceCell);
+                    SetupItemImage(item, item.originalColor, item.originalString, item.originalRect);
+                }
+                else if(slot.slotVariableType == item.itemVariableType || slot.slotVariableType == VariableType.Type.Any)
+                {
+                    Debug.Log("Move layered to layered");
+                    slot.SetItem(item, sourceCell);
+                    ResetLayeredSlots(sourceCell, item);
+                    CheckItemType(item, slot);
+                }
+                else { Debug.Log("Incorrect Variable Type"); sceneHandler.lives--; }
+                break;
 
-                                }
-                            }
-                        }
-                    }
+            default: //if source cell has a variable type
+                if(slot.slotVariableType == VariableType.Type.None)
+                {
+                    Debug.Log("Put back into Inventory -> Do backpeddle");
+                    slot.SetItem(item, sourceCell);
+                    item.gameObject.GetComponent<Button>().interactable = false;
+                    SetupItemImage(item, item.originalColor, item.originalString, item.originalRect);
+                    CheckBackPeddleType(sourceCell, item, slot);
+                    sourceCell.ResetSlot();
+                }
+                else if(slot.slotVariableType == item.itemVariableType || slot.slotVariableType == VariableType.Type.Any)
+                {
+                    Debug.Log("Moved within code panel");
+                    slot.SetItem(item, sourceCell);
+                    CheckBackPeddleType(sourceCell, item, slot);
+                    CheckItemType(item, slot);
+                    sourceCell.ResetSlot();
 
-                    //if all conditional slots are taken then backpeddle
-                    if (AllLayeredSlotsTaken(sourceCell.LayeredSlots) == true)
-                    {
-                        Debug.Log("Conditional Backpeddle");
-                        handler = ObjInt.activePanel.GetComponent<CodeHandler>();
-                        handler.ConditionalBackPeddle(item);
-                    }
-                    break;
-                default:
-                    switch(sourceCell.thisSlotType)
-                    {
-                        case VariableSlot.SlotType.Basic:
-                            Debug.Log("Basic Backpeddle");
-                            slot.SetItem(item, sourceCell);
-                            handler = ObjInt.activePanel.GetComponent<CodeHandler>();
-                            handler.BackPeddle(item);
-                            StartCoroutine(item.DisableDropdown(0.2f, true));
-                            break;
-                        case VariableSlot.SlotType.Conditional:
-                            slot.SetItem(item, sourceCell);
-                            //if item is basic and moving out of a conditional slot...
-                            CheckIFConditionalBackPeddle(item, sourceCell);
-                            break;
-                        case VariableSlot.SlotType.Looper:
-                            slot.SetItem(item, sourceCell);
-                            //if item is basic and moving out of a conditional slot...
-                            CheckIFConditionalBackPeddle(item, sourceCell);
-                            break;
-                    }
-                    break;
-            }
-            sourceCell.ResetSlot();
-        }
-        //if dropped in wrong slot
-        else
-        {
-            Debug.Log("Incorrect Variable Type");
-            sceneHandler.lives--;
+                }
+                else { Debug.Log("Incorrect Variable Type"); sceneHandler.lives--; }
+                break;
         }
     }
 
@@ -130,8 +102,9 @@ public class VariableValueHandler : MonoBehaviour
     public void SetItemValues(DragAndDropItem item, VariableSlot slot)
     {
         handler = ObjInt.activePanel.GetComponent<CodeHandler>();
-        SetupItemImage(item, Color.clear, "");
+        SetupItemImage(item, Color.clear, "", new Vector2(50,10));
         item.GetComponent<RectTransform>().sizeDelta = new Vector2(50, 10);
+
         switch (item.itemVariableType)
         {
             case VariableType.Type.Vector2:
@@ -160,11 +133,9 @@ public class VariableValueHandler : MonoBehaviour
                 CallCodeHandler(slot);
                 break;
             case VariableType.Type.Layered:
-
                 GameObject LayeredPanel = slot.gameObject.transform.GetChild(1).gameObject;
                 LayeredPanel.SetActive(true);
                 SetSlotImage(slot, "");
-
                 break;
             case VariableType.Type.Int:
                 Class.SetValues(slot, item.int_prop);
@@ -181,6 +152,28 @@ public class VariableValueHandler : MonoBehaviour
                 break;
             default:
                 Debug.Log("An error occurred");
+                break;
+        }
+    }
+
+    public void CallCodeHandler(VariableSlot slot)
+    {
+        switch (slot.thisSlotType)
+        {
+            case VariableSlot.SlotType.Basic:
+                handler.Invoke(handler.functionString, 0);
+                break;
+            case VariableSlot.SlotType.Conditional:
+                if (AllLayeredSlotsTaken(slot.gameObject.transform.parent.GetComponentInParent<VariableSlot>().LayeredSlots) == true)
+                {
+                    handler.DoTheConditionThing();
+                }
+                break;
+            case VariableSlot.SlotType.Looper:
+                if (AllLayeredSlotsTaken(slot.gameObject.transform.parent.GetComponentInParent<VariableSlot>().LayeredSlots) == true)
+                {
+                    handler.DoTheLoopThing();
+                }
                 break;
         }
     }
@@ -235,8 +228,9 @@ public class VariableValueHandler : MonoBehaviour
         item.dropdown.RefreshShownValue();
     }
 
-    public void SetupItemImage(DragAndDropItem item, Color color, string display)
+    public void SetupItemImage(DragAndDropItem item, Color color, string display, Vector2 rect)
     {
+        item.gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta =  rect;
         switch (item.itemVariableType)
         {
             case VariableType.Type.GameObject:
@@ -269,6 +263,62 @@ public class VariableValueHandler : MonoBehaviour
 
 
     //Repeated Checks//
+    public void CheckBackPeddleType(VariableSlot sourceCell, DragAndDropItem item, VariableSlot slot)
+    {
+        switch (sourceCell.thisSlotType)
+        {
+            case VariableSlot.SlotType.Basic:
+                handler = ObjInt.activePanel.GetComponent<CodeHandler>();
+                handler.BackPeddle(item);
+                StartCoroutine(item.DisableDropdown(0.2f, true));
+                break;
+            case VariableSlot.SlotType.Conditional:
+                //if item is basic and moving out of a conditional slot...
+                CheckIFConditionalBackPeddle(item, sourceCell);
+                break;
+            case VariableSlot.SlotType.Looper:
+                //if item is basic and moving out of a conditional slot...
+                CheckIFConditionalBackPeddle(item, sourceCell);
+                break;
+        }
+    }
+    
+    public void ResetLayeredSlots(VariableSlot sourceCell, DragAndDropItem item)
+    {
+        GameObject LayeredPanel = sourceCell.gameObject.transform.GetChild(1).gameObject;
+        LayeredPanel.SetActive(false);
+
+        //if all layered slots are taken then backpeddle
+        if (AllLayeredSlotsTaken(sourceCell.LayeredSlots) == true)
+        {
+            Debug.Log("Conditional Backpeddle");
+            handler = ObjInt.activePanel.GetComponent<CodeHandler>();
+            handler.ConditionalBackPeddle(item);
+        }
+
+        //if the cells layered slots have items in them, put them back in the inventory
+        foreach (GameObject g in sourceCell.LayeredSlots)
+        {
+            if (g.transform.childCount > 1)
+            {
+                GameObject thisItem = g.transform.GetChild(1).gameObject;
+
+                for (int s = 0; s < sceneHandler.InvSlots.Length; s++)
+                {
+                    if (sceneHandler.InvSlots[s].GetComponent<VariableSlot>().isTaken == false)
+                    {
+                        Debug.Log(thisItem.name);
+                        sceneHandler.InvSlots[s].GetComponent<VariableSlot>().PlaceItem(thisItem);
+                        Destroy(thisItem);
+                        g.GetComponent<VariableSlot>().ResetSlot();
+                        break;
+                    }
+                }
+            }
+        }
+        sourceCell.ResetSlot();
+    }
+
     public bool AllLayeredSlotsTaken(List<GameObject> slots)
     {
         foreach (GameObject g in slots)
@@ -283,7 +333,7 @@ public class VariableValueHandler : MonoBehaviour
     public void CheckIFConditionalBackPeddle(DragAndDropItem item, VariableSlot source)
     {
         int takenCount = 0;
-        foreach (GameObject g in source.LayeredSlots)
+        foreach (GameObject g in source.transform.parent.parent.GetComponent<VariableSlot>().LayeredSlots)
         {
             if (g.GetComponent<VariableSlot>().isTaken == true)
             {
@@ -295,29 +345,6 @@ public class VariableValueHandler : MonoBehaviour
             Debug.Log("Run Conditional Backpeddle");
             handler = ObjInt.activePanel.GetComponent<CodeHandler>();
             handler.ConditionalBackPeddle(item);
-        }
-    }
-
-    public void CallCodeHandler(VariableSlot slot)
-    {
-
-        switch (slot.thisSlotType)
-        {
-            case VariableSlot.SlotType.Basic:
-                handler.Invoke(handler.functionString, 0);
-                break;
-            case VariableSlot.SlotType.Conditional:
-                if (AllLayeredSlotsTaken(slot.gameObject.transform.parent.GetComponentInParent<VariableSlot>().LayeredSlots) == true)
-                {
-                    handler.DoTheConditionThing();
-                }
-                break;
-            case VariableSlot.SlotType.Looper:
-                if(AllLayeredSlotsTaken(slot.gameObject.transform.parent.GetComponentInParent<VariableSlot>().LayeredSlots) == true)
-                {
-                    handler.DoTheLoopThing();
-                }
-                break;
         }
     }
 

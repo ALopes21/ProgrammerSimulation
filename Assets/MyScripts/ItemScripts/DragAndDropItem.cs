@@ -35,6 +35,7 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     //Original Sprites, Colors and Text of the item
     public Color originalColor; //public Sprite OriginalSprite;
     public string originalString = "";
+    public Vector2 originalRect;
 
     public VariableType.Type itemVariableType = VariableType.Type.Vector2;
     public ItemType itemType = ItemType.Basic;
@@ -62,11 +63,13 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         {
             gameObject.GetComponent<Button>().interactable = false;
         }
+
         SetUpStartProp();
     }
 
     void SetUpStartProp()
     {
+        originalRect = new Vector2(50, 50);
         //Change from Color to Sprite
         switch (itemVariableType)
         {
@@ -132,7 +135,7 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             default:
                 break;
         }
-        valueHandler.SetupItemImage(this, originalColor, originalString);
+        valueHandler.SetupItemImage(this, originalColor, originalString, originalRect);
     }
 
     /// <summary>
@@ -268,7 +271,7 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         else
         {
             codeHandler.BackPeddle(this);
-            valueHandler.SetupItemImage(this, originalColor, originalString);
+            valueHandler.SetupItemImage(this, originalColor, originalString, originalRect);
             StartCoroutine(DisableDropdown(0.2f, true));
         }
        

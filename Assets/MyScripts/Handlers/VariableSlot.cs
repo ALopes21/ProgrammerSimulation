@@ -222,6 +222,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
         //RemoveItem();                                                       // Remove current item from this cell
         if (itemObj != null)
         {
+            Debug.Log("Placing item " + itemObj.name);
             GameObject newItem = Instantiate(itemObj, transform);
             newItem.transform.localPosition = Vector3.zero;
             DragAndDropItem item = newItem.GetComponent<DragAndDropItem>();
@@ -255,6 +256,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
             DragAndDropItem secondItem = secondCell.GetItem();              // Get item from second cell
             if (firstItem != null)
             {
+                Debug.Log("Setting first item " + firstItem.name);
                 // Place first item into second cell
                 firstItem.transform.SetParent(secondCell.transform, false);
                 firstItem.transform.localPosition = Vector3.zero;
@@ -262,6 +264,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
             }
             if (secondItem != null)
             {
+                Debug.Log("Setting second item " + secondItem.name);
                 // Place second item into first cell
                 secondItem.transform.SetParent(firstCell.transform, false);
                 secondItem.transform.localPosition = Vector3.zero;
