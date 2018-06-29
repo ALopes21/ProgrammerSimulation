@@ -15,11 +15,12 @@ public class ItemHolder : Editor
     SerializedProperty GOProp;
     SerializedProperty SprProp;
     SerializedProperty IntProp;
+    SerializedProperty MethodProp;
 
     SerializedProperty itemTypeProp;
 
-    SerializedProperty originalColour;
-    SerializedProperty originalString;
+    //SerializedProperty originalColour;
+    //SerializedProperty originalString;
 
     void OnEnable()
     {
@@ -32,9 +33,10 @@ public class ItemHolder : Editor
         GOProp = serializedObject.FindProperty("GO_prop");
         SprProp = serializedObject.FindProperty("sprite_prop");
         IntProp = serializedObject.FindProperty("int_prop");
+        MethodProp = serializedObject.FindProperty("method_prop");
 
-        originalColour = serializedObject.FindProperty("originalColor");
-        originalString = serializedObject.FindProperty("originalString");
+        //originalColour = serializedObject.FindProperty("originalColor");
+        //originalString = serializedObject.FindProperty("originalString");
 
     }
 
@@ -55,18 +57,23 @@ public class ItemHolder : Editor
                 {
                     case VariableType.Type.Vector2:
                         EditorGUILayout.PropertyField(Vector2Prop, new GUIContent("Vector2Prop"));
+                        EditorGUILayout.PropertyField(MethodProp);
                         break;
                     case VariableType.Type.Bool:
                         EditorGUILayout.PropertyField(boolProp, new GUIContent("BoolProp"));
+                        EditorGUILayout.PropertyField(MethodProp);
                         break;
                     case VariableType.Type.GameObject:
                         EditorGUILayout.PropertyField(GOProp, new GUIContent("GameObjectProp"));
+                        EditorGUILayout.PropertyField(MethodProp);
                         break;
                     case VariableType.Type.Sprite:
                         EditorGUILayout.PropertyField(SprProp, new GUIContent("SpriteProp"));
+                        EditorGUILayout.PropertyField(MethodProp);
                         break;
                     case VariableType.Type.Int:
                         EditorGUILayout.PropertyField(IntProp, new GUIContent("IntProp"));
+                        EditorGUILayout.PropertyField(MethodProp);
                         break;
                     default:
                         break;
@@ -78,22 +85,27 @@ public class ItemHolder : Editor
                     case VariableType.Type.Vector2:
                         EditorList.Show(serializedObject.FindProperty("vector2List_Prop"), EditorListOption.ListLabel | EditorListOption.Buttons);
                         EditorGUILayout.PropertyField(Vector2Prop, new GUIContent("Vector2Prop"));
+                        EditorGUILayout.PropertyField(MethodProp);
                         break;
                     case VariableType.Type.Bool:
                         EditorList.Show(serializedObject.FindProperty("boolList_prop"), EditorListOption.ListLabel | EditorListOption.Buttons);
                         EditorGUILayout.PropertyField(boolProp, new GUIContent("BoolProp"));
+                        EditorGUILayout.PropertyField(MethodProp);
                         break;
                     case VariableType.Type.GameObject:
                         EditorList.Show(serializedObject.FindProperty("gameObjectList_prop"), EditorListOption.ListLabel | EditorListOption.Buttons);
                         EditorGUILayout.PropertyField(GOProp, new GUIContent("GameObjectProp"));
+                        EditorGUILayout.PropertyField(MethodProp);
                         break;
                     case VariableType.Type.Sprite:
                         EditorList.Show(serializedObject.FindProperty("spriteList_prop"), EditorListOption.ListLabel | EditorListOption.Buttons);
                         EditorGUILayout.PropertyField(SprProp, new GUIContent("SpriteProp"));
+                        EditorGUILayout.PropertyField(MethodProp);
                         break;
                     case VariableType.Type.Int:
                         EditorList.Show(serializedObject.FindProperty("intList_prop"), EditorListOption.ListLabel | EditorListOption.Buttons);
                         EditorGUILayout.PropertyField(IntProp, new GUIContent("IntProp"));
+                        EditorGUILayout.PropertyField(MethodProp);
                         break;
                     default:
                         break;
@@ -103,12 +115,6 @@ public class ItemHolder : Editor
                 break;
 
         }
-
-        EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.PropertyField(originalColour);
-        EditorGUILayout.PropertyField(originalString);
-        EditorGUI.EndDisabledGroup();
-
         serializedObject.ApplyModifiedProperties();
     }
 }

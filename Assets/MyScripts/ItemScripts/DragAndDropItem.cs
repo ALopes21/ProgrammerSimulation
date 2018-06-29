@@ -24,6 +24,7 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public GameObject GO_prop;
     public GameObject sprite_prop;
     public int int_prop;
+    public string method_prop;
 
     //List of possible values loaded into the dropdowns
     public string[] vector2List_Prop;
@@ -53,17 +54,9 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     void Start()
     {
-        gameObject.GetComponent<Button>().interactable = false;
         valueHandler = GameObject.Find("Main Camera").GetComponent<VariableValueHandler>();
-
         dropdown = gameObject.transform.GetChild(1).gameObject.GetComponent<Dropdown>();
         dropdown.gameObject.SetActive(false);
-
-        if(itemType != ItemType.Option)
-        {
-            gameObject.GetComponent<Button>().interactable = false;
-        }
-
         SetUpStartProp();
     }
 
@@ -226,9 +219,10 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public void GetDropdownValue()
     {
         codeHandler = GameObject.Find("Main Camera").GetComponent<ObjectSelection>().activePanel.GetComponent<CodeHandler>();
-        codeHandler.BackPeddle(this);
+        //codeHandler.BackPeddle(this);
         int value = dropdown.GetComponent<Dropdown>().value - 1;
-        if(value >= 0)
+        Debug.Log("GetDropdownValue" + value);
+        if (value >= 0)
         {
             switch (itemVariableType)
             {
@@ -270,8 +264,8 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
         else
         {
-            codeHandler.BackPeddle(this);
-            valueHandler.SetupItemImage(this, originalColor, originalString, originalRect);
+            //codeHandler.BackPeddle(this);
+            //valueHandler.SetupItemImage(this, originalColor, originalString, originalRect);
             StartCoroutine(DisableDropdown(0.2f, true));
         }
        

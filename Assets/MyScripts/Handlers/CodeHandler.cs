@@ -25,7 +25,7 @@ public class GenericClass
     }
     public void SetValues(VariableSlot slot, object value)
     {
-        switch(slot.thisSlotType)
+        switch (slot.thisSlotType)
         {
             case VariableSlot.SlotType.Basic:
                 basicValue = value;
@@ -35,7 +35,7 @@ public class GenericClass
                 SetConditions(slot, value);
                 break;
             case VariableSlot.SlotType.Looper:
-                if(slot.thisConditionType == VariableSlot.ConditionType.LoopInt)
+                if (slot.thisConditionType == VariableSlot.ConditionType.LoopInt)
                 {
                     loopCount = (int)value;
                 }
@@ -51,38 +51,46 @@ public class GenericClass
 public class CodeHandler : MonoBehaviour {
 
     public string functionString;
+    public bool backpeddle;
     //References
     public ObjectSelection ObjInt;
 
     // Use this for initialization
     void Start () {
         ObjInt = GameObject.Find("Main Camera").GetComponent<ObjectSelection>();
+        backpeddle = false;
     }
 
     public void DoTheMoveThing()
     {
         MovableObject data = ObjInt.currentObject.GetComponent<MovableObject>();
-        data.MoveObject((Vector2)GenericClass.basicValue);
+        if (backpeddle){data.MoveBack();}
+        else{data.MoveObject((Vector2)GenericClass.basicValue);}
+        backpeddle = false;
     }
 
     public void DoTheColliderThing()
     {
+        Debug.Log("Callin DoTheCOlliderThing");
         ObjectChanger data = ObjInt.currentObject.GetComponent<ObjectChanger>();
-        data.ToggleCollider((bool)GenericClass.basicValue);
+        if (backpeddle == true) { data.ToggleCollider(data.originalBool); backpeddle = false; return; }
+        else { data.ToggleCollider((bool)GenericClass.basicValue); }
     }
 
     public void DoTheObjectThing()
     {
         ObjectChanger data = ObjInt.currentObject.GetComponent<ObjectChanger>();
-        data.newTarget = (GameObject)GenericClass.basicValue;
-        data.ChangeTarget();
+        if (backpeddle){ data.newTarget = data.originalTarget; data.ChangeTarget();}
+        else { data.newTarget = (GameObject)GenericClass.basicValue; data.ChangeTarget(); }
+        backpeddle = false;
     }
 
     public void DoTheSpriteThing()
     {
         ObjectChanger data = ObjInt.currentObject.GetComponent<ObjectChanger>();
-        data.newObject = (GameObject)GenericClass.basicValue;
-        data.ChangeSprite();
+        if (backpeddle) { data.newObject = data.originalObject; data.ChangeSprite(); }
+        else { data.newObject = (GameObject)GenericClass.basicValue; data.ChangeSprite(); }
+        backpeddle = false;
     }
 
     public void DoTheConditionThing()
@@ -100,29 +108,9 @@ public class CodeHandler : MonoBehaviour {
         Invoke(functionString, 1);
     }
 
-    public void BackPeddle(DragAndDropItem item)
-    {
-        MovableObject moveData = ObjInt.currentObject.GetComponent<MovableObject>();
-        ObjectChanger ObjChangData = ObjInt.currentObject.GetComponent<ObjectChanger>();
-        switch (item.itemVariableType)
-        {
-            case VariableType.Type.Vector2:
-                moveData.MoveBack();
-                break;
-            case VariableType.Type.Bool:
-                ObjChangData.ToggleCollider(ObjChangData.originalBool);
-                break;
-            case VariableType.Type.GameObject:
-                ObjChangData.newTarget = ObjChangData.originalTarget;
-                ObjChangData.ChangeTarget();
-                break;
-            case VariableType.Type.Sprite:
-                ObjChangData.newObject = ObjChangData.originalObject;
-                ObjChangData.ChangeSprite();
-                break;
-            default:
-                break;
-        } 
+    public void BackPeddle(DragAndDropItem item){
+        backpeddle = true;
+        Invoke(item.method_prop, 0);
     }
 
     public void ConditionalBackPeddle(DragAndDropItem item)

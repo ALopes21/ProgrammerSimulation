@@ -25,7 +25,7 @@ public class MovableObject : MonoBehaviour {
         {
             if(col.transform.childCount > 0)
             {
-                Debug.Log(col.gameObject.name + " is the parent");
+                //Debug.Log(col.gameObject.name + " is the parent");
             }
             else
             {

@@ -32,7 +32,6 @@ public class ObjectSelection : MonoBehaviour
                 RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 5f, 1 << LayerMask.NameToLayer("Objects"));
                 if (hit != null && hit.collider != null)
                 {
-                    Debug.Log("I'm hitting " + hit.collider.name);
                     if (hit.collider.tag == "Codeable")
                     {
                         currentObject = hit.collider.gameObject;

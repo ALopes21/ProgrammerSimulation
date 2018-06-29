@@ -178,7 +178,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
                 GetComponentInChildren<Text>().color = Color.yellow;
                 break;
             case VariableType.Type.Int:
-                GetComponentInChildren<Text>().color = Color.cyan;
+                GetComponentInChildren<Text>().color = Color.black;
                 break;
             case VariableType.Type.Layered:
                 GetComponentInChildren<Text>().color = Color.green;
@@ -222,7 +222,6 @@ public class VariableSlot : MonoBehaviour, IDropHandler
         //RemoveItem();                                                       // Remove current item from this cell
         if (itemObj != null)
         {
-            Debug.Log("Placing item " + itemObj.name);
             GameObject newItem = Instantiate(itemObj, transform);
             newItem.transform.localPosition = Vector3.zero;
             DragAndDropItem item = newItem.GetComponent<DragAndDropItem>();

@@ -128,13 +128,14 @@ public class ObjectChangerEditor : Editor
         EditorGUILayout.PropertyField(Disabled);
         EditorGUILayout.PropertyField(Enabled);
         EditorGUILayout.PropertyField(thisCondition);
+        EditorGUILayout.PropertyField(originalBool);
+        EditorGUILayout.PropertyField(originalTarget);
+        EditorGUILayout.PropertyField(originalObject);
 
         EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.PropertyField(originalBool);
+
         EditorGUILayout.PropertyField(newTarget);
-        EditorGUILayout.PropertyField(originalTarget);
         EditorGUILayout.PropertyField(newObject);
-        EditorGUILayout.PropertyField(originalObject);
         EditorGUILayout.PropertyField(Cousin);
         EditorGUI.EndDisabledGroup();
 

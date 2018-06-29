@@ -45,7 +45,6 @@ public class VariableValueHandler : MonoBehaviour
                     Debug.Log("Move layered to inv & all slots inside");
                     slot.isTaken = true;
                     ResetLayeredSlots(sourceCell, item);
-                    item.gameObject.GetComponent<Button>().interactable = false;
                     slot.SetItem(item, sourceCell);
                     SetupItemImage(item, item.originalColor, item.originalString, item.originalRect);
                 }
@@ -64,9 +63,9 @@ public class VariableValueHandler : MonoBehaviour
                 {
                     Debug.Log("Put back into Inventory -> Do backpeddle");
                     slot.SetItem(item, sourceCell);
-                    item.gameObject.GetComponent<Button>().interactable = false;
                     SetupItemImage(item, item.originalColor, item.originalString, item.originalRect);
                     CheckBackPeddleType(sourceCell, item, slot);
+                    StartCoroutine(item.DisableDropdown(0.2f, true));
                     sourceCell.ResetSlot();
                 }
                 else if(slot.slotVariableType == item.itemVariableType || slot.slotVariableType == VariableType.Type.Any)
@@ -91,7 +90,9 @@ public class VariableValueHandler : MonoBehaviour
                 SetItemValues(item, slot);
                 break;
             case DragAndDropItem.ItemType.Option:
-                item.gameObject.GetComponent<Button>().interactable = true;
+                //item.gameObject.GetComponent<Button>().interactable = true;
+                SetupItemImage(item, Color.clear, "", new Vector2(50, 10));
+                item.GetComponent<RectTransform>().sizeDelta = slot.GetComponent<RectTransform>().sizeDelta;
                 SetupDropDown(item);
                 break;
             default:
@@ -103,7 +104,7 @@ public class VariableValueHandler : MonoBehaviour
     {
         handler = ObjInt.activePanel.GetComponent<CodeHandler>();
         SetupItemImage(item, Color.clear, "", new Vector2(50,10));
-        item.GetComponent<RectTransform>().sizeDelta = new Vector2(50, 10);
+        item.GetComponent<RectTransform>().sizeDelta = slot.GetComponent<RectTransform>().sizeDelta;
 
         switch (item.itemVariableType)
         {
@@ -111,25 +112,25 @@ public class VariableValueHandler : MonoBehaviour
                 Vector2 newPosition = GetVector2(item.vector2_prop);
                 Class.SetValues(slot, newPosition);
                 SetSlotImage(slot, "(" + item.vector2_prop + ");");
-                handler.functionString = "DoTheMoveThing";
+                handler.functionString = item.method_prop;
                 CallCodeHandler(slot);
                 break;
             case VariableType.Type.Bool:
                 Class.SetValues(slot, item.bool_prop);
                 SetSlotImage(slot, item.bool_prop.ToString() + ";");
-                handler.functionString = "DoTheColliderThing";
+                handler.functionString = item.method_prop;
                 CallCodeHandler(slot);
                 break;
             case VariableType.Type.GameObject:
                 Class.SetValues(slot, item.GO_prop);
                 SetSlotImage(slot, item.GO_prop.name + ";");
-                handler.functionString = "DoTheObjectThing";
+                handler.functionString = item.method_prop;
                 CallCodeHandler(slot);
                 break;
             case VariableType.Type.Sprite:
                 Class.SetValues(slot, item.sprite_prop);
                 SetSlotImage(slot, item.sprite_prop.name + ";");
-                handler.functionString = "DoTheSpriteThing";
+                handler.functionString = item.method_prop;
                 CallCodeHandler(slot);
                 break;
             case VariableType.Type.Layered:
@@ -146,7 +147,7 @@ public class VariableValueHandler : MonoBehaviour
                 }
                 else
                 {
-                    handler.functionString = "DoTheIntThing";
+                    handler.functionString = item.method_prop;
                     CallCodeHandler(slot);
                 }
                 break;
@@ -158,6 +159,7 @@ public class VariableValueHandler : MonoBehaviour
 
     public void CallCodeHandler(VariableSlot slot)
     {
+        Debug.Log("Calling Code Handler");
         switch (slot.thisSlotType)
         {
             case VariableSlot.SlotType.Basic:
@@ -180,6 +182,7 @@ public class VariableValueHandler : MonoBehaviour
 
     public void SetupDropDown(DragAndDropItem item)
     {
+        Debug.Log("SetupDropdownvalues");
         List<string> values = new List<string>();
         values.Add("");
         switch (item.itemVariableType)
@@ -270,7 +273,6 @@ public class VariableValueHandler : MonoBehaviour
             case VariableSlot.SlotType.Basic:
                 handler = ObjInt.activePanel.GetComponent<CodeHandler>();
                 handler.BackPeddle(item);
-                StartCoroutine(item.DisableDropdown(0.2f, true));
                 break;
             case VariableSlot.SlotType.Conditional:
                 //if item is basic and moving out of a conditional slot...
