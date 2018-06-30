@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+
 
 public class ObjectSelection : MonoBehaviour
 {
@@ -32,7 +32,7 @@ public class ObjectSelection : MonoBehaviour
                 RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 5f, 1 << LayerMask.NameToLayer("Objects"));
                 if (hit != null && hit.collider != null)
                 {
-                    if (hit.collider.tag == "Codeable")
+                    if(hit.collider.tag.Contains("Codeable"))
                     {
                         currentObject = hit.collider.gameObject;
                         SetupCodePanel(currentObject);
@@ -42,7 +42,6 @@ public class ObjectSelection : MonoBehaviour
         }
     }
 
-    //Change this to activate gameObject/sprite instead of text
     public void SetupCodePanel(GameObject selectedObject)
     {
         for(int i = 0; i< CodePanel.Length; i++)
@@ -65,5 +64,10 @@ public class ObjectSelection : MonoBehaviour
         Collider2D col = currentObject.GetComponent<Collider2D>();
         currentObject = null;
         activePanel = null;
+    }
+
+    public void SetupInfoPanel()
+    {
+        Debug.Log("Activate info panel");
     }
 }

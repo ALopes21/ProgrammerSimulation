@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 
 // Custom Editor using SerializedProperties.
@@ -19,8 +17,8 @@ public class ItemHolder : Editor
 
     SerializedProperty itemTypeProp;
 
-    //SerializedProperty originalColour;
-    //SerializedProperty originalString;
+    SerializedProperty InfoIcon;
+    SerializedProperty Tooltip;
 
     void OnEnable()
     {
@@ -34,9 +32,8 @@ public class ItemHolder : Editor
         SprProp = serializedObject.FindProperty("sprite_prop");
         IntProp = serializedObject.FindProperty("int_prop");
         MethodProp = serializedObject.FindProperty("method_prop");
-
-        //originalColour = serializedObject.FindProperty("originalColor");
-        //originalString = serializedObject.FindProperty("originalString");
+        InfoIcon = serializedObject.FindProperty("InfoIcon");
+        Tooltip = serializedObject.FindProperty("tooltip");
 
     }
 
@@ -115,6 +112,10 @@ public class ItemHolder : Editor
                 break;
 
         }
+
+        EditorGUILayout.PropertyField(InfoIcon);
+        EditorGUILayout.PropertyField(Tooltip);
+
         serializedObject.ApplyModifiedProperties();
     }
 }

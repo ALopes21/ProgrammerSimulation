@@ -6,16 +6,16 @@ using UnityEngine.UI;
 public class SceneHandler : MonoBehaviour
 {
     public int SceneNumber;
-    int StarNumber;
     float myTime;
     public bool Unclocked;
     public int lives;
 
-    public GameObject[] Stars;
     public GameObject[] Lives;
-    public Sprite Star, NoStar, EmptyLife, FullLife;
+    public Sprite EmptyLife, FullLife, InfoIcon;
     public GameObject ErrorPanel;
     public bool gameOver;
+    public GameObject InfoPanel;
+    public bool InfoModeActivated;
 
     public GameObject[] InvSlots;
     public GameObject[] Items;
@@ -25,25 +25,22 @@ public class SceneHandler : MonoBehaviour
         ErrorPanel = GameObject.Find("ErrorPanel");
         ErrorPanel.SetActive(false);
 
-        Star = (Sprite)Resources.Load("UISprites/Star", typeof(Sprite));
-        NoStar = (Sprite)Resources.Load("UISprites/NoStar", typeof(Sprite));
+        InfoPanel = GameObject.Find("InfoButton");
+        InfoPanel.transform.GetChild(0).gameObject.SetActive(false);
+        InfoIcon = (Sprite)Resources.Load("UISprites/InfoIcon", typeof(Sprite));
+        InfoModeActivated = false;
 
         EmptyLife = (Sprite)Resources.Load("UISprites/EmptyLife", typeof(Sprite));
         FullLife = (Sprite)Resources.Load("UISprites/FullLife", typeof(Sprite));
 
-        Stars = GameObject.FindGameObjectsWithTag("InGameStars");
         Lives = GameObject.FindGameObjectsWithTag("InGameLives");
 
         InvSlots = GameObject.FindGameObjectsWithTag("Slot");
         Items = GameObject.FindGameObjectsWithTag("Item");
 
-        StarNumber = 3;
         lives = 3;
         gameOver = false;
-        for (int i= 0; i < Stars.Length; i++)
-        {
-            Stars[i].GetComponent<Image>().sprite = Star;
-        }
+
         for(int i = 0; i < Lives.Length; i++)
         {
             Lives[i].GetComponent<Image>().sprite = FullLife;
@@ -62,20 +59,6 @@ public class SceneHandler : MonoBehaviour
     {
         myTime += Time.deltaTime;
         GameObject.Find("ScorePanel").GetComponentInChildren<Text>().text = Mathf.RoundToInt(myTime).ToString();
-        if (myTime < 5f)
-        {
-            StarNumber = 3;
-        }
-        else if (myTime > 5f && myTime < 10f)
-        {
-            StarNumber = 2;
-            Stars[0].GetComponent<Image>().sprite = NoStar;
-        }
-        else if (myTime > 10f)
-        {
-            StarNumber = 1;
-            Stars[1].GetComponent<Image>().sprite = NoStar;
-        }
 
         switch (lives)
         {
@@ -117,19 +100,7 @@ public class SceneHandler : MonoBehaviour
         for (int i = 0; i < Persistence.savedLevels.Count; i++)
         {
             if (Persistence.savedLevels[i].Number == SceneNumber)
-            {
-                Debug.Log("OldStars: " + Persistence.savedLevels[i].Stars);
-                if(Persistence.savedLevels[i].Stars < StarNumber)
-                {
-                    newLevel.Stars = StarNumber;
-                    Debug.Log("NewStars: " + newLevel.Stars);
-                }
-                else
-                {
-                    newLevel.Stars = Persistence.savedLevels[i].Stars;
-                    Debug.Log("SameAs: " + newLevel.Stars);
-                }
-
+            {              
                 Debug.Log("OldTime: " + Persistence.savedLevels[i].Time);
                 if (Persistence.savedLevels[i].Time > myTime)
                 {
@@ -148,7 +119,6 @@ public class SceneHandler : MonoBehaviour
             else
             {
                 Debug.Log("Creating New Save...");
-                newLevel.Stars = StarNumber;
                 newLevel.Time = myTime;
                 newLevel.currentLevel = SceneNumber++;
                 Persistence.UpdateLevelList(LevelData.current);
@@ -156,7 +126,6 @@ public class SceneHandler : MonoBehaviour
             }
         }
         Debug.Log("Creating FIRST save...");
-        newLevel.Stars = StarNumber;
         newLevel.Time = myTime;
         newLevel.currentLevel = SceneNumber++;
         Persistence.UpdateLevelList(LevelData.current);
@@ -170,6 +139,22 @@ public class SceneHandler : MonoBehaviour
     public void ReLoadScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void ActivateInfoPanel()
+    {
+        if(InfoModeActivated == true)
+        {
+            InfoModeActivated = false;
+            InfoPanel.GetComponentInChildren<Text>().text = "this is the info panel...";
+            InfoPanel.transform.GetChild(0).gameObject.SetActive(false);
+            InfoPanel.GetComponent<Image>().sprite = InfoIcon;
+        }
+        else if(InfoModeActivated == false)
+        {
+            InfoModeActivated = true;
+            InfoPanel.transform.GetChild(0).gameObject.SetActive(true);
+        }
     }
 }
 

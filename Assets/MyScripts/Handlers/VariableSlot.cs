@@ -61,7 +61,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
 
     void Start()
     {
-        if(gameObject.tag != "Slot")
+        if(!gameObject.tag.Contains("Slot"))
         {
             OriginalText = gameObject.GetComponentInChildren<Text>().text;
             OriginalColor = gameObject.GetComponentInChildren<Text>().color;
@@ -72,7 +72,7 @@ public class VariableSlot : MonoBehaviour, IDropHandler
             Transform panel = transform.GetChild(1);
             foreach (Transform child in panel)
             {
-                if (child.gameObject.tag == "LayeredSlots")
+                if (child.gameObject.tag.Contains("LayeredSlots"))
                 {
                     if (!LayeredSlots.Contains(child.gameObject))
                     { LayeredSlots.Add(child.gameObject); }

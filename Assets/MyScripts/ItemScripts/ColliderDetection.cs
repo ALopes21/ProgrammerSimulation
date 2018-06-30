@@ -15,7 +15,7 @@ public class ColliderDetection : MonoBehaviour {
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //Note: probably dont need to check tag, we may want this for non codeable objects too
-        if (collision.gameObject.tag == "Codeable")
+        if (collision.gameObject.tag.Contains("Codeable"))
         {
             currentCollisions.Add(collision.gameObject);
             foreach (GameObject gObject in currentCollisions)
@@ -29,7 +29,7 @@ public class ColliderDetection : MonoBehaviour {
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Codeable")
+        if (collision.gameObject.tag.Contains("Codeable"))
         {
             currentCollisions.Remove(collision.gameObject);
             Debug.Log(collision + " Removed");

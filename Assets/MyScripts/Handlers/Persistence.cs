@@ -68,7 +68,6 @@ public class LevelData
 {
     public static LevelData current;
     public int Number;
-    public int Stars;
     public float Time;
     public int currentLevel;
 }

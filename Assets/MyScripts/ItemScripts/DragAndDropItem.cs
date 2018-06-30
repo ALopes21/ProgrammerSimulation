@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
+using UnityStandardAssets.Utility;
 
 /// <summary>
 /// Every "drag and drop" item must contain this script
@@ -38,6 +39,9 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public string originalString = "";
     public Vector2 originalRect;
 
+    public Sprite InfoIcon;
+    public string tooltip;
+
     public VariableType.Type itemVariableType = VariableType.Type.Vector2;
     public ItemType itemType = ItemType.Basic;
 
@@ -47,6 +51,7 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public Dropdown dropdown;
     public VariableValueHandler valueHandler;
     public CodeHandler codeHandler;
+    public SceneHandler sceneHandler;
 
     public delegate void DragEvent(DragAndDropItem item);
     static public event DragEvent OnItemDragStartEvent;                             // Drag start event
@@ -55,6 +60,7 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     void Start()
     {
         valueHandler = GameObject.Find("Main Camera").GetComponent<VariableValueHandler>();
+        sceneHandler = GameObject.Find("Main Camera").GetComponent<SceneHandler>();
         dropdown = gameObject.transform.GetChild(1).gameObject.GetComponent<Dropdown>();
         dropdown.gameObject.SetActive(false);
         SetUpStartProp();
@@ -137,6 +143,8 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     /// <param name="eventData"></param>
     public void OnBeginDrag(PointerEventData eventData)
     {
+        UpdateInfoPanel();
+
         sourceCell = GetComponentInParent<VariableSlot>();
         draggedItem = this;                                                             // Set as dragged item
         icon = new GameObject("Icon");                                                  // Create object for item's icon
@@ -279,6 +287,15 @@ public class DragAndDropItem : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             dropdown.value = 0;
         }
         dropdown.gameObject.SetActive(false);
+    }
+
+    public void UpdateInfoPanel()
+    {
+        if (sceneHandler.InfoModeActivated == true)
+        {
+            sceneHandler.InfoPanel.GetComponent<Image>().sprite = InfoIcon;
+            sceneHandler.InfoPanel.GetComponentInChildren<Text>().text = tooltip;
+        }
     }
 
 }

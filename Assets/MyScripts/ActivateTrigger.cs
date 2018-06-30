@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 namespace UnityStandardAssets.Utility
@@ -17,7 +18,7 @@ namespace UnityStandardAssets.Utility
             Animate = 4,    // Start animation on target
             Deactivate = 5,  // Decativate target GameObject
             GetVariables = 6,    //Put variables into slots and destroy chest
-            LoadScene = 7 //load next scene
+            LoadScene = 7, //load next scene
         }
 
         public Mode action = Mode.Activate;         // The action to accomplish
@@ -25,8 +26,6 @@ namespace UnityStandardAssets.Utility
         public GameObject source;
         public int triggerCount = 1;
         public bool repeatTrigger = false;
-
-
         public SceneHandler handler;
 
 
@@ -35,7 +34,7 @@ namespace UnityStandardAssets.Utility
             handler = GameObject.Find("Main Camera").GetComponent<SceneHandler>();
         }
 
-        private void DoActivateTrigger(Collider2D col)
+        public void DoActivateTrigger(Collider2D col = default(Collider2D))
         {
             triggerCount--;
 
@@ -69,7 +68,10 @@ namespace UnityStandardAssets.Utility
                         }
                         break;
                     case Mode.Activate:
-                        
+                        if(targetGameObject != null)
+                        {
+                            targetGameObject.SetActive(true);
+                        }
                         break;
                     case Mode.Enable:
                         if (targetBehaviour != null)
@@ -105,7 +107,7 @@ namespace UnityStandardAssets.Utility
                             }
                         break;
                     case Mode.LoadScene:
-                        if (col.tag == "Player")
+                        if (col.tag.Contains("Player"))
                         {
                             switch (this.gameObject.name)
                             {
@@ -114,7 +116,7 @@ namespace UnityStandardAssets.Utility
                                     handler.UpdateLevelInfo();
                                     break;
                                 case "Killzone":
-                                    targetGameObject.SetActive(true);
+                                    handler.ErrorPanel.SetActive(true);
                                     handler.gameOver = true;
                                     break;
                                 default:

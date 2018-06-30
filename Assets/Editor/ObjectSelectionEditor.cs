@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
+using UnityStandardAssets.Utility;
 
 // Custom Editor using SerializedProperties.
 // Automatic handling of multi-object editing, undo, and prefab overrides.
@@ -20,7 +19,7 @@ public class ObjectSelectionEditor : Editor
         currentObject = serializedObject.FindProperty("currentObject");
         activePanel = serializedObject.FindProperty("activePanel");
 
-    }
+}
 
     public override void OnInspectorGUI()
     {
@@ -42,24 +41,24 @@ public class SceneHandlerEditor : Editor
 {
     SerializedProperty SceneNumber;
     SerializedProperty Unclocked;
+    SerializedProperty InfoModeActivated;
 
 
     SerializedProperty lives;
     SerializedProperty gameOver;
-    SerializedProperty Star, NoStar, EmptyLife, FullLife;
+    SerializedProperty EmptyLife, FullLife;
     SerializedProperty ErrorPanel;
 
     void OnEnable()
     {
         SceneNumber = serializedObject.FindProperty("SceneNumber");
         Unclocked = serializedObject.FindProperty("Unclocked");
+        InfoModeActivated = serializedObject.FindProperty("InfoModeActivated");
 
         lives = serializedObject.FindProperty("lives");
         gameOver = serializedObject.FindProperty("gameOver");
         ErrorPanel = serializedObject.FindProperty("ErrorPanel");
 
-        Star = serializedObject.FindProperty("Star");
-        NoStar = serializedObject.FindProperty("NoStar");
         EmptyLife = serializedObject.FindProperty("EmptyLife");
         FullLife = serializedObject.FindProperty("FullLife");
 
@@ -73,15 +72,13 @@ public class SceneHandlerEditor : Editor
         EditorGUILayout.PropertyField(Unclocked);
 
         EditorGUI.BeginDisabledGroup(true);
+        EditorGUILayout.PropertyField(InfoModeActivated);
         EditorGUILayout.PropertyField(lives);
         EditorGUILayout.PropertyField(gameOver);
         EditorGUILayout.PropertyField(ErrorPanel);
-        EditorGUILayout.PropertyField(Star);
-        EditorGUILayout.PropertyField(NoStar);
         EditorGUILayout.PropertyField(EmptyLife);
         EditorGUILayout.PropertyField(FullLife);
 
-        EditorList.Show(serializedObject.FindProperty("Stars"), EditorListOption.ListLabel | EditorListOption.Buttons);
         EditorList.Show(serializedObject.FindProperty("Lives"), EditorListOption.ListLabel | EditorListOption.Buttons);
         EditorList.Show(serializedObject.FindProperty("InvSlots"), EditorListOption.ListLabel | EditorListOption.Buttons);
         EditorList.Show(serializedObject.FindProperty("Items"), EditorListOption.ListLabel | EditorListOption.Buttons);
@@ -147,7 +144,6 @@ public class ObjectChangerEditor : Editor
 [CanEditMultipleObjects]
 public class CodeHandlerEditor : Editor
 {
-
     SerializedProperty functionString;
     SerializedProperty ObjInt;
 
